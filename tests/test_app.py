@@ -149,6 +149,16 @@ class AddressBookTests(unittest.TestCase):
         self.assertEqual(response[0][2], 'image/svg+xml')
         self.assertIn(b'<svg', response[0][1])
 
+    def test_python_server_serves_the_excel_script_referenced_by_the_page(self):
+        handler = object.__new__(Handler)
+        handler.path = '/xlsx.js'
+        with patch.object(handler, 'respond') as respond:
+            handler.do_GET()
+        self.assertEqual(respond.call_args.args[0], 200)
+        _, body, content_type = respond.call_args.args
+        self.assertEqual(content_type, 'text/javascript; charset=utf-8')
+        self.assertIn(b'AddressBookXlsx={importFile,exportFile}', body)
+
     def test_legacy_invalid_json_is_reported_without_replacing_the_file(self):
         self.store.path.parent.mkdir(parents=True, exist_ok=True)
         self.store.path.write_text('{broken', encoding='utf-8')

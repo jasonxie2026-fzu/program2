@@ -35,7 +35,7 @@
 
 ## 命令与环境
 
-- `python3 -m unittest discover -s tests -v`：14 项原后端应用回归测试、4 项课程证据检查，以及 3 项静态部署检查通过；最终套件共 21 项。
+- `python3 -m unittest discover -s tests -v`：15 项应用回归测试、5 项课程证据检查和 3 项静态部署检查通过，共 23 项。录制时发现本地 Python 服务缺少页面引用的 `/xlsx.js` 路由，已补齐并用回归测试验证状态码、类型和脚本内容。
 - `python3 -m py_compile app.py tests/*.py scripts/build_static.py`：通过。
 - `HTMLParser` 解析 `static/index.html`：通过。
 - 独立构建/打包命令：未配置；无需构建步骤。

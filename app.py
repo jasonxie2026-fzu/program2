@@ -221,9 +221,16 @@ class Handler(BaseHTTPRequestHandler):
                 return self.respond(200, export_xlsx(store.list()), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', {'Content-Disposition':'attachment; filename="contacts.xlsx"'})
             except (ValueError, json.JSONDecodeError) as error:
                 return self.respond(500, {'error': str(error)})
-        files = {'/':('index.html','text/html; charset=utf-8'), '/style.css':('style.css','text/css; charset=utf-8'), '/app.js':('app.js','text/javascript; charset=utf-8'), '/favicon.svg':('favicon.svg','image/svg+xml')}
+        files = {
+            '/': ('index.html', 'text/html; charset=utf-8'),
+            '/style.css': ('style.css', 'text/css; charset=utf-8'),
+            '/app.js': ('app.js', 'text/javascript; charset=utf-8'),
+            '/xlsx.js': ('xlsx.js', 'text/javascript; charset=utf-8'),
+            '/favicon.svg': ('favicon.svg', 'image/svg+xml'),
+        }
         if u.path in files:
-            name, kind = files[u.path]; return self.respond(200, (ROOT / 'static' / name).read_bytes(), kind)
+            name, kind = files[u.path]
+            return self.respond(200, (ROOT / 'static' / name).read_bytes(), kind)
         self.respond(404, {'error':'未找到资源'})
     def body(self):
         n = int(self.headers.get('Content-Length','0'))
