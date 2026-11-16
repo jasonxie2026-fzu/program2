@@ -72,6 +72,7 @@ class AddressBookTests(unittest.TestCase):
         self.assertEqual(restored[0]['note'], a['note'])
         self.assertTrue(restored[0]['favorite'])
         self.assertEqual(restored[1]['phones'], ['13900000000'])
+        self.assertEqual(self.store.list('lin_wechat')[0]['name'], '林晓')
 
     def test_export_keeps_formula_like_values_as_inline_text(self):
         person = self.store.create({'name': '=HYPERLINK("https://bad.example")', 'phones': ['001234']})
@@ -125,6 +126,35 @@ class AddressBookTests(unittest.TestCase):
 
     def test_zero_contact_export_is_a_valid_importable_template(self):
         self.assertEqual(import_xlsx(export_xlsx([])), [])
+
+    def test_documented_duplicate_policy_is_append_without_silent_deduplication(self):
+        record = {'name':'重复但保留', 'phones':[], 'emails':[], 'company':'', 'address':'', 'note':'', 'favorite':False}
+        self.assertEqual(self.store.add_many([record]), 1)
+        self.assertEqual(self.store.add_many([record]), 1)
+        self.assertEqual([p['name'] for p in self.store.list()], ['重复但保留', '重复但保留'])
+
+    def test_list_supports_more_than_two_hundred_contacts(self):
+        self.store.add_many([{'name':f'联系人{i:03}', 'phones':[f'010{i:07}'], 'favorite':i % 3 == 0} for i in range(225)])
+        self.assertEqual(len(self.store.list()), 225)
+        self.assertEqual(len(self.store.list('联系人22')), 5)
+        self.assertEqual(len(self.store.list(favorites=True)), 75)
+
+    def test_brand_favicon_is_served_without_external_requests(self):
+        handler = object.__new__(Handler)
+        handler.path = '/favicon.svg'
+        response = []
+        handler.respond = lambda status, data, kind='application/json; charset=utf-8', **kwargs: response.append((status, data, kind))
+        handler.do_GET()
+        self.assertEqual(response[0][0], 200)
+        self.assertEqual(response[0][2], 'image/svg+xml')
+        self.assertIn(b'<svg', response[0][1])
+
+    def test_legacy_invalid_json_is_reported_without_replacing_the_file(self):
+        self.store.path.parent.mkdir(parents=True, exist_ok=True)
+        self.store.path.write_text('{broken', encoding='utf-8')
+        with self.assertRaises(ValueError):
+            self.store.list()
+        self.assertEqual(self.store.path.read_text(encoding='utf-8'), '{broken')
 
     def test_import_preview_is_read_only_and_import_adds_only_after_confirmation(self):
         content = export_xlsx([{'name': '合成联系人', 'phones': ['00123'], 'emails': [], 'company': '', 'address': '', 'note': '', 'favorite': True}])

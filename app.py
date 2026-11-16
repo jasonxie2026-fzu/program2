@@ -211,9 +211,17 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         u = urlparse(self.path)
         if u.path == '/api/contacts':
-            q = parse_qs(u.query); return self.respond(200, store.list(q.get('q',[''])[0], q.get('favorite',[''])[0]=='1'))
-        if u.path == '/api/export': return self.respond(200, export_xlsx(store.list()), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', {'Content-Disposition':'attachment; filename="contacts.xlsx"'})
-        files = {'/':('index.html','text/html; charset=utf-8'), '/style.css':('style.css','text/css; charset=utf-8'), '/app.js':('app.js','text/javascript; charset=utf-8')}
+            try:
+                q = parse_qs(u.query)
+                return self.respond(200, store.list(q.get('q',[''])[0], q.get('favorite',[''])[0]=='1'))
+            except (ValueError, json.JSONDecodeError) as error:
+                return self.respond(500, {'error': str(error)})
+        if u.path == '/api/export':
+            try:
+                return self.respond(200, export_xlsx(store.list()), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', {'Content-Disposition':'attachment; filename="contacts.xlsx"'})
+            except (ValueError, json.JSONDecodeError) as error:
+                return self.respond(500, {'error': str(error)})
+        files = {'/':('index.html','text/html; charset=utf-8'), '/style.css':('style.css','text/css; charset=utf-8'), '/app.js':('app.js','text/javascript; charset=utf-8'), '/favicon.svg':('favicon.svg','image/svg+xml')}
         if u.path in files:
             name, kind = files[u.path]; return self.respond(200, (ROOT / 'static' / name).read_bytes(), kind)
         self.respond(404, {'error':'未找到资源'})

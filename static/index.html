@@ -1,5 +1,116 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>人间有信 · 通讯录</title><link rel="stylesheet" href="/style.css"></head>
-<body><div class="shell"><aside class="sidebar"><div class="brand"><span class="brand-mark">✳</span><span>人间有信<small>CONTACT BOOK</small></span></div><div class="side-label">我的通讯录</div><nav><button class="nav active" data-filter="all"><span>▦</span>全部联系人 <b id="all-count">0</b></button><button class="nav" data-filter="favorites"><span>♡</span>星标联系人 <b id="favorite-count">0</b></button></nav><div class="side-bottom"><div class="side-illustration">✦</div><strong>把重要的人，<br>好好留在身边。</strong><p>一份简单、安静的通讯录。</p></div></aside>
-<main><header class="topbar"><div><span class="eyebrow">YOUR LITTLE BLACK BOOK</span><h1 id="title">全部联系人</h1><p id="subtitle">所有值得记住的人，都在这里。</p></div><button id="add" class="primary">＋ <span>新建联系人</span></button></header><section class="summary"><div><span class="summary-icon">✳</span><span><small>联系人总数</small><strong id="summary-total">0</strong></span></div><div><span class="summary-icon pink">♡</span><span><small>星标联系人</small><strong id="summary-star">0</strong></span></div><p>人与人之间的连接，<br>从一个名字开始。 <span>↗</span></p></section><section class="content"><div class="content-head"><div><h2>联系人列表 <span id="visible-count">0</span></h2><p>点击联系人可查看或编辑详细信息</p></div><div class="actions"><label class="search"><span>⌕</span><input id="search" placeholder="搜索姓名、电话或邮箱" autocomplete="off"></label><button class="outline" id="import-btn">↑ 导入</button><a class="outline" href="/api/export">↓ 导出</a><input type="file" id="file" accept=".xlsx" hidden></div></div><div class="table-head"><span>联系人</span><span>联系方式</span><span>公司 / 备注</span><span></span></div><div id="list"></div><div id="empty" class="empty" hidden><div>✳</div><h3>这里还是空的</h3><p>添加一位联系人，让故事从这里开始。</p><button class="outline" id="empty-add">＋ 新建联系人</button></div></section><footer>人间有信 <span>·</span> 让每一次联系，都有迹可循</footer></main></div>
-<dialog id="dialog"><form id="form"><div class="modal-head"><div><span class="eyebrow">CONTACT DETAILS</span><h2 id="form-title">新建联系人</h2><p>记下关于这个人的一点信息。</p></div><button type="button" class="close" id="close" aria-label="关闭">×</button></div><div class="form-grid"><label class="wide">姓名 <em>*</em><input name="name" required maxlength="100" placeholder="怎么称呼？"></label><label>电话 <small>多个号码请换行</small><textarea name="phones" rows="2" placeholder="输入电话号码"></textarea></label><label>邮箱 <small>多个邮箱请换行</small><textarea name="emails" rows="2" placeholder="输入邮箱地址"></textarea></label><label>公司<input name="company" placeholder="工作单位或组织"></label><label>地址<input name="address" placeholder="所在城市或地址"></label><label class="wide">备注<textarea name="note" rows="2" placeholder="写点什么，方便以后想起来"></textarea></label></div><label class="favorite-toggle"><input type="checkbox" name="favorite"> <span>♡ 加入星标联系人</span></label><div class="modal-actions"><button type="button" class="outline danger" id="delete" hidden>删除联系人</button><span class="spacer"></span><button type="button" class="outline" id="cancel">取消</button><button class="primary" type="submit">保存联系人</button></div></form></dialog><div id="toast" role="status" aria-live="polite"></div><script src="/app.js"></script></body></html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f3eb">
+  <title>人间有信 · 通讯录</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="/" aria-label="人间有信通讯录首页">
+        <span class="brand-mark" aria-hidden="true">✳</span>
+        <span>人间有信<small>CONTACT BOOK</small></span>
+      </a>
+      <p class="side-label">我的通讯录</p>
+      <nav aria-label="联系人视图">
+        <button class="nav active" data-filter="all" aria-pressed="true"><span aria-hidden="true">▦</span><span>全部联系人</span><b id="all-count">0</b></button>
+        <button class="nav" data-filter="favorites" aria-pressed="false"><span aria-hidden="true">♡</span><span>星标联系人</span><b id="favorite-count">0</b></button>
+      </nav>
+      <div class="side-note">
+        <span class="side-flower" aria-hidden="true">✦</span>
+        <strong>把重要的人，<br>好好留在身边。</strong>
+        <p>一份简单、安静的通讯录。</p>
+      </div>
+    </aside>
+
+    <main id="main-content">
+      <header class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">YOUR LITTLE BLACK BOOK</span>
+          <h1 id="title">全部联系人</h1>
+          <p id="subtitle">所有值得记住的人，都在这里。</p>
+        </div>
+        <button id="add" class="primary"><span aria-hidden="true">＋</span> 新建联系人</button>
+        <div class="paper-mark" aria-hidden="true"><span>✳</span><i></i><b></b></div>
+      </header>
+
+      <section class="summary" aria-label="通讯录统计">
+        <div class="stat"><span class="summary-icon" aria-hidden="true">✳</span><span><small>联系人总数</small><strong id="summary-total">0</strong></span></div>
+        <div class="stat"><span class="summary-icon favorite-icon" aria-hidden="true">♡</span><span><small>星标联系人</small><strong id="summary-star">0</strong></span></div>
+        <p class="summary-note">人与人之间的连接，<br>从一个名字开始。</p>
+      </section>
+
+      <section class="content" aria-labelledby="list-heading">
+        <div class="content-head">
+          <div>
+            <h2 id="list-heading">联系人列表 <span id="visible-count" aria-live="polite">0</span></h2>
+            <p>选择一位联系人，查看完整信息或编辑</p>
+          </div>
+          <div class="actions">
+            <label class="search"><span aria-hidden="true">⌕</span><span class="sr-only">搜索姓名、电话、邮箱或其他信息</span><input id="search" type="search" placeholder="搜索姓名、电话、邮箱或其他信息" autocomplete="off"></label>
+            <button class="outline" id="import-btn"><span aria-hidden="true">↑</span> 导入</button>
+            <button class="outline" id="export-btn"><span aria-hidden="true">↓</span> 导出</button>
+            <input type="file" id="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" class="visually-hidden">
+          </div>
+        </div>
+
+        <div class="table-head" aria-hidden="true"><span>联系人</span><span>常用联系方式</span><span>公司 / 备注</span><span></span></div>
+        <div id="list" class="contact-list" role="list"></div>
+        <div id="empty" class="empty" hidden>
+          <div class="empty-flower" aria-hidden="true">✳</div>
+          <h3>这里还是空的</h3>
+          <p>添加一位联系人，让故事从这里开始。</p>
+          <button class="outline" id="empty-add"><span aria-hidden="true">＋</span> 新建联系人</button>
+        </div>
+        <div id="load-error" class="load-error" role="alert" hidden>
+          <p>暂时无法读取联系人，请检查本地服务或数据文件。</p>
+          <button class="outline" id="retry-load">重试</button>
+        </div>
+        <p class="privacy-note">免登录本地通讯录 · 数据保存在此电脑，可随时导出 Excel 备份。</p>
+      </section>
+      <footer>人间有信 <span>·</span> 让每一次联系，都有迹可循</footer>
+    </main>
+  </div>
+
+  <dialog id="detail-dialog" class="detail-dialog" aria-labelledby="detail-name">
+    <div id="detail-panel" class="detail-panel"></div>
+  </dialog>
+
+  <dialog id="editor-dialog" class="editor-dialog" aria-labelledby="form-title">
+    <form id="form" novalidate>
+      <div class="modal-head">
+        <div><span class="eyebrow">CONTACT DETAILS</span><h2 id="form-title">新建联系人</h2><p>记下关于这个人的一点信息。</p></div>
+        <button type="button" class="close" id="close-editor" aria-label="关闭编辑窗口">×</button>
+      </div>
+      <div class="form-grid">
+        <label class="wide">姓名 <em>*</em><input name="name" required maxlength="100" autocomplete="name" aria-describedby="name-error" placeholder="怎么称呼？"><span id="name-error" class="field-error" hidden></span></label>
+        <div class="method-section wide">
+          <div class="section-heading"><div><h3>联系方式</h3><p>电话、邮箱、社交账号和地址都可以添加多项。</p></div><button type="button" class="outline add-method" id="add-method"><span aria-hidden="true">＋</span> 添加方式</button></div>
+          <div id="method-rows" class="method-rows"></div>
+          <p class="field-error" id="methods-error" role="alert" hidden></p>
+        </div>
+        <label>公司<input name="company" autocomplete="organization" placeholder="工作单位或组织"></label>
+        <label class="wide">备注<textarea name="note" rows="3" placeholder="写点什么，方便以后想起来"></textarea></label>
+      </div>
+      <label class="favorite-toggle"><input type="checkbox" name="favorite"><span class="favorite-heart" aria-hidden="true">♡</span><span>加入星标联系人</span></label>
+      <div class="modal-actions"><button type="button" class="outline danger" id="delete-contact" hidden>删除联系人</button><span class="spacer"></span><button type="button" class="outline" id="cancel-editor">取消</button><button class="primary" type="submit">保存联系人</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="import-dialog" class="import-dialog" aria-labelledby="import-title">
+    <div class="import-panel">
+      <div class="modal-head"><div><span class="eyebrow">EXCEL IMPORT</span><h2 id="import-title">导入预览</h2><p id="import-summary"></p></div><button type="button" class="close" id="close-import" aria-label="关闭导入预览">×</button></div>
+      <div id="import-rows" class="import-rows"></div>
+      <p class="import-policy">导入方式：追加到现有通讯录，不自动去重。请核对姓名和联系方式后再继续。</p>
+      <p id="import-error" class="field-error" role="alert" hidden></p>
+      <div class="modal-actions"><span class="spacer"></span><button type="button" class="outline" id="cancel-import">取消</button><button type="button" class="primary" id="confirm-import">确认导入</button></div>
+    </div>
+  </dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="/app.js" defer></script>
+</body>
+</html>
