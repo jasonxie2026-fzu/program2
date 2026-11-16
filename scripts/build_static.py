@@ -15,6 +15,11 @@ def build(output: Path) -> Path:
     output.mkdir(parents=True)
     for name in ("index.html", "app.js", "xlsx.js", "style.css", "favicon.svg"):
         shutil.copy2(ASSETS / name, output / name)
+    manifest = ROOT / ".openai" / "hosting.json"
+    if manifest.is_file():
+        site_config = output / ".openai"
+        site_config.mkdir()
+        shutil.copy2(manifest, site_config / "hosting.json")
     return output
 
 

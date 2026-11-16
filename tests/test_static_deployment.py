@@ -1,3 +1,4 @@
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -12,6 +13,10 @@ class StaticDeploymentTests(unittest.TestCase):
             for name in ("index.html", "app.js", "xlsx.js", "style.css", "favicon.svg"):
                 with self.subTest(asset=name):
                     self.assertTrue((output / name).is_file())
+            manifest = output / ".openai/hosting.json"
+            self.assertTrue(manifest.is_file())
+            expected = json.loads((Path(__file__).resolve().parents[1] / ".openai/hosting.json").read_text())
+            self.assertEqual(json.loads(manifest.read_text()), expected)
 
     def test_public_runtime_keeps_contacts_in_browser_storage(self):
         app = (Path(__file__).resolve().parents[1] / "static/app.js").read_text(encoding="utf-8")
