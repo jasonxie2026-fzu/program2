@@ -159,6 +159,17 @@ class AddressBookTests(unittest.TestCase):
         self.assertEqual(content_type, 'text/javascript; charset=utf-8')
         self.assertIn(b'AddressBookXlsx={importFile,exportFile}', body)
 
+    def test_python_server_serves_showcase_as_independent_html_route(self):
+        handler = object.__new__(Handler)
+        handler.path = '/showcase.html'
+        with patch.object(handler, 'respond') as respond:
+            handler.do_GET()
+        self.assertEqual(respond.call_args.args[0], 200)
+        _, body, content_type = respond.call_args.args
+        self.assertEqual(content_type, 'text/html; charset=utf-8')
+        self.assertIn('交互演示 · 示例数据'.encode(), body)
+        self.assertNotIn('localStorage'.encode(), body)
+
     def test_legacy_invalid_json_is_reported_without_replacing_the_file(self):
         self.store.path.parent.mkdir(parents=True, exist_ok=True)
         self.store.path.write_text('{broken', encoding='utf-8')

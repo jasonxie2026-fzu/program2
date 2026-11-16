@@ -122,6 +122,8 @@ main { width: min(1360px, 100%); min-width: 0; margin: 0 auto; padding: 46px cla
 .privacy-note { padding: 12px 26px; border-top: 1px solid #efeee7; color: #556b5f; font-size: 12px; }
 footer { margin-top: 19px; color: #52695c; font-size: 12px; }
 footer span { padding: 0 6px; color: var(--gold); }
+footer a { color: #52695c; text-decoration: underline; text-decoration-color: #c7d2c5; text-underline-offset: 3px; }
+footer a:hover { color: var(--forest); }
 .sr-only, .visually-hidden { position: absolute !important; width: 1px !important; height: 1px !important; overflow: hidden !important; clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; clip-path: inset(50%) !important; }
 :focus-visible { outline: 3px solid #567f6b; outline-offset: 3px; }
 

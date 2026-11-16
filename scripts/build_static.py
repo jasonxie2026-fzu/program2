@@ -13,7 +13,7 @@ def build(output: Path) -> Path:
     if output.exists():
         shutil.rmtree(output)
     output.mkdir(parents=True)
-    for name in ("index.html", "app.js", "xlsx.js", "style.css", "favicon.svg"):
+    for name in ("index.html", "showcase.html", "app.js", "xlsx.js", "style.css", "favicon.svg"):
         shutil.copy2(ASSETS / name, output / name)
     manifest = ROOT / ".openai" / "hosting.json"
     if manifest.is_file():

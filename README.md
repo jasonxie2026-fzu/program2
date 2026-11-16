@@ -43,3 +43,7 @@ python3 -m py_compile app.py tests/*.py scripts/build_static.py
 - [代码规范与 Git 协作](CODE_STANDARDS.md)
 - [QA 结果](docs/qa-results.md)和[演示步骤](docs/demo-script.md)
 - [提交清单](docs/submission-checklist.md)、[个人博客底稿](博客草稿.md)和 [PSP 记录表](docs/psp-template.md)
+
+## 作品展示
+
+查看[人间有信 Showcase](https://renjian-youxin-addressbook-2026.loneflora4.chatgpt.site/showcase.html)：暖纸张风格的独立介绍页，内含虚构联系人的本地交互演示。展示页星标和详情只存在当前页面内存，刷新会恢复示例状态，不会访问或改变真实通讯录。真实通讯录仍由主页进入：<https://renjian-youxin-addressbook-2026.loneflora4.chatgpt.site/>。

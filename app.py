@@ -223,6 +223,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self.respond(500, {'error': str(error)})
         files = {
             '/': ('index.html', 'text/html; charset=utf-8'),
+            '/showcase.html': ('showcase.html', 'text/html; charset=utf-8'),
             '/style.css': ('style.css', 'text/css; charset=utf-8'),
             '/app.js': ('app.js', 'text/javascript; charset=utf-8'),
             '/xlsx.js': ('xlsx.js', 'text/javascript; charset=utf-8'),
