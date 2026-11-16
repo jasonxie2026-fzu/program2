@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 class SubmissionEvidenceTests(unittest.TestCase):
     def test_course_evidence_files_exist(self):
         for relative in (
+            "CODE_STANDARDS.md",
             "docs/qa-results.md",
             "docs/submission-checklist.md",
             "docs/demo-script.md",
@@ -21,14 +22,38 @@ class SubmissionEvidenceTests(unittest.TestCase):
 
     def test_blog_marks_unverified_course_fields_as_pending(self):
         blog = (ROOT / "博客草稿.md").read_text(encoding="utf-8")
-        self.assertIn("分工与贡献比例", blog)
+        self.assertIn("实际代码与分工", blog)
+        self.assertIn("贡献比例", blog)
         self.assertIn("PSP", blog)
-        self.assertIn("未创建前不要填写为已完成", blog)
+        self.assertIn("粘贴实际仓库地址", blog)
+        self.assertIn("粘贴共享仓库 Commits 页面截图", blog)
+        self.assertIn("粘贴实际 PR 地址", blog)
+        self.assertIn("粘贴实际发布版本地址", blog)
 
-    def test_qa_report_does_not_claim_saved_screenshots_or_video(self):
+    def test_demo_images_and_video_are_present_and_linked(self):
+        blog = (ROOT / "博客草稿.md").read_text(encoding="utf-8")
         report = (ROOT / "docs/qa-results.md").read_text(encoding="utf-8")
-        self.assertIn("仓库内没有保存截图文件", report)
-        self.assertIn("没有演示视频", report)
+        assets = ROOT / "docs/evidence"
+        screenshots = sorted(assets.glob("*.jpg"))
+        self.assertEqual(len(screenshots), 10)
+        for screenshot in screenshots:
+            with self.subTest(screenshot=screenshot.name):
+                data = screenshot.read_bytes()
+                self.assertTrue(data.startswith(b"\xff\xd8\xff"))
+                self.assertTrue(data.endswith(b"\xff\xd9"))
+        video = assets / "address-book-demo.mp4"
+        with video.open("rb") as stream:
+            self.assertEqual(stream.read(8)[4:], b"ftyp")
+        self.assertIn("docs/evidence/address-book-demo.mp4", blog)
+        self.assertIn("evidence/address-book-demo.mp4", report)
+
+    def test_readme_links_to_code_standards_and_submission_instructions(self):
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        checklist = (ROOT / "docs/submission-checklist.md").read_text(encoding="utf-8")
+        self.assertIn("(CODE_STANDARDS.md)", readme)
+        self.assertIn("(docs/submission-checklist.md)", readme)
+        self.assertIn("创建团队自己的 GitHub 仓库", checklist)
+        self.assertIn("(../CODE_STANDARDS.md)", checklist)
 
     def test_published_site_and_browser_local_privacy_are_documented(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")

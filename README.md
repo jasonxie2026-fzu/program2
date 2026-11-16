@@ -1,6 +1,6 @@
 # 人间有信｜本地通讯录
 
-“把重要的人，好好留在身边。”这是一个只在本机运行的联系人管理工具。支持联系人增删改查、星标、搜索、多种联系方式、Excel 批量导入/导出；联系人数据保存在项目的 `data/contacts.json`，不上传到第三方服务。
+「把重要的人，好好留在身边。」这个通讯录支持联系人管理、星标、搜索、多种联系方式和 Excel 导入导出。Python 版将数据保存在本机的 `data/contacts.json`，在线版将数据保存在当前浏览器。
 
 ## 运行
 
@@ -27,7 +27,7 @@ python3 app.py
 
 ## 在线版
 
-公开托管版沿用同一界面，但不调用本地 Python API；联系人保存在当前浏览器的 `localStorage`，不会上传到服务器或在不同设备间同步。浏览器存储被清除时数据也会删除，请定期导出 Excel 备份。部署静态资源可运行 `python3 scripts/build_static.py` 生成 `dist/`。
+公开托管版沿用同一界面。联系人数据只保存在当前浏览器的 `localStorage`，不上传到服务器，也不会在不同设备间同步。浏览器存储被清除时数据也会删除，请定期导出 Excel 备份。部署静态资源可运行 `python3 scripts/build_static.py` 生成 `dist/`。
 
 在线地址：[人间有信 · 联系人](https://renjian-youxin-addressbook-2026.loneflora4.chatgpt.site)。网站公开可访问；每位访客的通讯录只存在自己的浏览器中，访问其他人的网页不会看到对方联系人。
 
@@ -38,4 +38,8 @@ python3 -m unittest discover -s tests -v
 python3 -m py_compile app.py tests/*.py scripts/build_static.py
 ```
 
-查看真实测试范围和未运行项：[QA 结果](docs/qa-results.md)。课程博客及 PSP 尚需本人补充的材料见 [博客草稿](博客草稿.md) 和 [提交清单](docs/submission-checklist.md)。
+## 开发协作与课程材料
+
+- [代码规范与 Git 协作](CODE_STANDARDS.md)
+- [QA 结果](docs/qa-results.md)和[演示步骤](docs/demo-script.md)
+- [提交清单](docs/submission-checklist.md)、[个人博客底稿](博客草稿.md)和 [PSP 记录表](docs/psp-template.md)
