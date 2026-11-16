@@ -1,0 +1,48 @@
+/* Example theme only. Merge into the existing project's styling strategy. */
+:root {
+  --paper: #F7F3EB;
+  --paper-elevated: #FFFCF6;
+  --ink: #15352F;
+  --ink-soft: #556D64;
+  --sage: #8BA99A;
+  --coral: #DC806C;
+  --gold: #CDA16B;
+  --line: #DBDFD5;
+  --radius-control: 13px;
+  --radius-card: 20px;
+  --duration-fast: 160ms;
+  --duration-base: 240ms;
+  --duration-slow: 360ms;
+  --ease-out-quint: cubic-bezier(.22, 1, .36, 1);
+}
+/* Use only within a Hero or similarly quiet decorative zone. */
+.paper-ambient {
+  position: relative;
+  isolation: isolate;
+  background: radial-gradient(circle at 85% 20%, #F2D9C799, transparent 38%),
+              radial-gradient(circle at 30% 75%, #CBE1D244, transparent 50%),
+              var(--paper);
+}
+.paper-ambient::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .34;
+  background-image: radial-gradient(#9DAFA3 0.6px, transparent 0.6px);
+  background-size: 23px 23px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 40%, transparent);
+  mask-image: linear-gradient(90deg, transparent, black 40%, transparent);
+}
+.ui-lift {
+  transition: transform var(--duration-base) var(--ease-out-quint),
+              border-color var(--duration-base) var(--ease-out-quint);
+}
+@media (hover: hover) and (pointer: fine) {
+  .ui-lift:hover { transform: translateY(-3px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ui-lift { transition-duration: 0.01ms; }
+  .paper-ambient *, .paper-ambient::before { animation: none !important; }
+}

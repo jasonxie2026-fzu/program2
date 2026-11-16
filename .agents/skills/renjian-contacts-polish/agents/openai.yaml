@@ -1,0 +1,4 @@
+interface:
+  display_name: "Renjian Contacts Polish"
+  short_description: "作业约束优先的通讯录视觉与动效升级"
+  default_prompt: "Use renjian-contacts-polish to audit this contact-book repository, protect the rubric-critical features, and implement a refined animated Chinese frontend with tests."
