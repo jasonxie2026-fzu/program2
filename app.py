@@ -15,23 +15,53 @@ from xml.sax.saxutils import escape
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / 'data' / 'contacts.json'
-FIELDS = ['姓名', '电话', '邮箱', '公司', '地址', '备注', '收藏']
+FIELDS = ['姓名', '收藏', '公司', '备注']
+METHOD_TYPES = {'phone', 'email', 'social', 'address', 'other'}
 NS = '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}'
 
 def clean(data):
+    if not isinstance(data, dict):
+        raise ValueError('联系人格式不正确')
     name = str(data.get('name', '')).strip()
     if not name or len(name) > 100:
         raise ValueError('姓名不能为空，且不能超过 100 个字符')
-    result = {'name': name}
-    for key in ('phones', 'emails'):
-        value = data.get(key, [])
-        if not isinstance(value, list):
+    methods = []
+    supplied = data.get('methods')
+    if supplied is not None:
+        if not isinstance(supplied, list):
             raise ValueError('联系方式格式不正确')
-        result[key] = [str(v).strip() for v in value if str(v).strip()]
-    for key in ('company', 'address', 'note'):
-        result[key] = str(data.get(key, '')).strip()
-    result['favorite'] = bool(data.get('favorite', False))
-    return result
+        for item in supplied:
+            if not isinstance(item, dict) or item.get('type') not in METHOD_TYPES:
+                raise ValueError('联系方式类型不正确')
+            value = str(item.get('value', '')).strip()
+            label = str(item.get('label', '')).strip()
+            if value:
+                methods.append({'type': item['type'], 'label': label, 'value': value})
+    else:
+        for key, kind in (('phones', 'phone'), ('emails', 'email')):
+            values = data.get(key, [])
+            if not isinstance(values, list):
+                raise ValueError('联系方式格式不正确')
+            methods.extend({'type': kind, 'label': '', 'value': str(value).strip()} for value in values if str(value).strip())
+        legacy_address = str(data.get('address', '')).strip()
+        if legacy_address:
+            methods.append({'type': 'address', 'label': '', 'value': legacy_address})
+    address = str(data.get('address', '')).strip()
+    if address and not any(m['type'] == 'address' and m['value'] == address for m in methods):
+        methods.append({'type': 'address', 'label': '', 'value': address})
+    favorite = data.get('favorite', False)
+    if not isinstance(favorite, bool):
+        raise ValueError('星标状态格式不正确')
+    return {
+        'name': name,
+        'phones': [m['value'] for m in methods if m['type'] == 'phone'],
+        'emails': [m['value'] for m in methods if m['type'] == 'email'],
+        'company': str(data.get('company', '')).strip(),
+        'address': next((m['value'] for m in methods if m['type'] == 'address'), address),
+        'note': str(data.get('note', '')).strip(),
+        'favorite': favorite,
+        'methods': methods,
+    }
 
 class Store:
     def __init__(self, path):
@@ -39,7 +69,11 @@ class Store:
         self.lock = threading.RLock()
     def _read(self):
         if not self.path.exists(): return []
-        return json.loads(self.path.read_text(encoding='utf-8'))
+        items = json.loads(self.path.read_text(encoding='utf-8'))
+        if not isinstance(items, list): raise ValueError('本地联系人数据格式不正确')
+        if any(not isinstance(item, dict) or not item.get('id') for item in items):
+            raise ValueError('本地联系人数据格式不正确，原文件已保留')
+        return [{**clean(item), 'id': item['id']} for item in items]
     def _write(self, items):
         self.path.parent.mkdir(parents=True, exist_ok=True)
         tmp = self.path.with_suffix('.tmp')
@@ -48,7 +82,7 @@ class Store:
     def list(self, query='', favorites=False):
         with self.lock:
             q = query.strip().casefold()
-            return [p for p in self._read() if (not favorites or p['favorite']) and (not q or q in ' '.join([p['name'], p['company'], p['address'], p['note'], *p['phones'], *p['emails']]).casefold())]
+            return [p for p in self._read() if (not favorites or p['favorite']) and (not q or q in ' '.join([p['name'], p['company'], p['address'], p['note'], *(m['value'] for m in p['methods'])]).casefold())]
     def create(self, data):
         with self.lock:
             p = clean(data); p['id'] = uuid.uuid4().hex
@@ -72,10 +106,33 @@ class Store:
             return len(validated)
 
 def export_xlsx(records):
-    rows = [FIELDS] + [[p['name'], '\n'.join(p['phones']), '\n'.join(p['emails']), p['company'], p['address'], p['note'], '是' if p['favorite'] else '否'] for p in records]
+    normalized = [clean(p) for p in records]
+    order = [('phone', '电话'), ('email', '邮箱'), ('social', '社交方式'), ('address', '地址'), ('other', '其他方式')]
+    counts = {kind: max((sum(m['type'] == kind for m in p['methods']) for p in normalized), default=0) for kind, _ in order}
+    headers = list(FIELDS)
+    for kind, label in order:
+        for index in range(1, counts[kind] + 1):
+            if kind == 'other': headers.extend([f'{label} {index} 类型', f'{label} {index}', f'{label} {index} 标签'])
+            else: headers.extend([f'{label} {index}', f'{label} {index} 标签'])
+    rows = [headers]
+    for p in normalized:
+        row = [p['name'], '是' if p['favorite'] else '否', p['company'], p['note']]
+        for kind, _ in order:
+            values = [m for m in p['methods'] if m['type'] == kind]
+            for index in range(counts[kind]):
+                value = values[index] if index < len(values) else {}
+                if kind == 'other': row.extend([value.get('type', ''), value.get('value', ''), value.get('label', '')])
+                else: row.extend([value.get('value', ''), value.get('label', '')])
+        rows.append(row)
     xmlrows = []
     for i, row in enumerate(rows, 1):
-        cells = ''.join(f'<c r="{chr(65+j)}{i}" t="inlineStr"><is><t xml:space="preserve">{escape(str(value))}</t></is></c>' for j, value in enumerate(row))
+        def cell_ref(index):
+            ref = ''
+            while index:
+                index, remainder = divmod(index - 1, 26)
+                ref = chr(65 + remainder) + ref
+            return ref
+        cells = ''.join(f'<c r="{cell_ref(j+1)}{i}" t="inlineStr"><is><t xml:space="preserve">{escape(str(value))}</t></is></c>' for j, value in enumerate(row))
         xmlrows.append(f'<row r="{i}">{cells}</row>')
     sheet = '<?xml version="1.0" encoding="UTF-8"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>' + ''.join(xmlrows) + '</sheetData></worksheet>'
     files = {'[Content_Types].xml':'<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>', '_rels/.rels':'<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>', 'xl/workbook.xml':'<?xml version="1.0"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="联系人" sheetId="1" r:id="rId1"/></sheets></workbook>', 'xl/_rels/workbook.xml.rels':'<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>', 'xl/worksheets/sheet1.xml':sheet}
@@ -107,13 +164,40 @@ def import_xlsx(content):
                     cells[index-1] = raw
                 rows.append(cells)
         if not rows or rows[0].get(0) != '姓名': raise ValueError('首列必须是“姓名”，请使用导出的模板')
+        header_cells = rows[0]
+        headers = {str(value).strip(): index for index, value in header_cells.items()}
+        dynamic = (any(re.match(r'^(电话|邮箱|社交方式|地址|其他方式)\s+\d+', label) for label in headers)
+                   or [header_cells.get(i) for i in range(4)] == ['姓名', '收藏', '公司', '备注'])
         result = []
         for row in rows[1:]:
             if not any(str(v).strip() for v in row.values()): continue
             split = lambda s: [x.strip() for x in re.split(r'[\n;；]', s) if x.strip()]
-            result.append(clean({'name': row.get(0,''), 'phones':split(row.get(1,'')), 'emails':split(row.get(2,'')), 'company':row.get(3,''), 'address':row.get(4,''), 'note':row.get(5,''), 'favorite':row.get(6,'').strip().lower() in ('是','yes','true','1')}))
+            if dynamic:
+                methods = []
+                patterns = [('phone', '电话'), ('email', '邮箱'), ('social', '社交方式'), ('address', '地址')]
+                for kind, label in patterns:
+                    for header, column in headers.items():
+                        match = re.fullmatch(re.escape(label) + r'\s+(\d+)', header)
+                        if match:
+                            suffix = match.group(1)
+                            value = str(row.get(column, '')).strip()
+                            method_label = str(row.get(headers.get(f'{label} {suffix} 标签', -1), '')).strip()
+                            if value: methods.append({'type': kind, 'label': method_label, 'value': value})
+                for header, column in headers.items():
+                    match = re.fullmatch(r'其他方式\s+(\d+)\s+类型', header)
+                    if match:
+                        suffix = match.group(1)
+                        kind = str(row.get(column, 'other')).strip() or 'other'
+                        value = str(row.get(headers.get(f'其他方式 {suffix}', -1), '')).strip()
+                        label = str(row.get(headers.get(f'其他方式 {suffix} 标签', -1), '')).strip()
+                        if value: methods.append({'type': kind if kind in METHOD_TYPES else 'other', 'label': label, 'value': value})
+                favorite_value = str(row.get(headers.get('收藏', 1), '')).strip().lower()
+                result.append(clean({'name':row.get(headers.get('姓名', 0),''), 'favorite':favorite_value in ('是','yes','true','1'), 'company':row.get(headers.get('公司', 2),''), 'note':row.get(headers.get('备注', 3),''), 'methods':methods}))
+            else:
+                # Backward compatibility with the original seven-column workbook.
+                result.append(clean({'name': row.get(0,''), 'phones':split(row.get(1,'')), 'emails':split(row.get(2,'')), 'company':row.get(3,''), 'address':row.get(4,''), 'note':row.get(5,''), 'favorite':row.get(6,'').strip().lower() in ('是','yes','true','1')}))
         return result
-    except (zipfile.BadZipFile, KeyError, ET.ParseError, IndexError, TypeError) as e:
+    except (zipfile.BadZipFile, KeyError, ET.ParseError, IndexError, TypeError, AttributeError) as e:
         raise ValueError('无法读取此 Excel 文件，请使用 .xlsx 格式和指定模板') from e
 
 store = Store(DATA)
@@ -139,6 +223,10 @@ class Handler(BaseHTTPRequestHandler):
         return self.rfile.read(n)
     def mutate(self):
         path = urlparse(self.path).path
+        if self.command == 'POST' and path == '/api/import/preview':
+            records = import_xlsx(self.body())
+            preview = [{'name': p['name'], 'phones': len(p['phones']), 'emails': len(p['emails']), 'favorite': p['favorite']} for p in records[:3]]
+            return self.respond(200, {'count': len(records), 'preview': preview, 'duplicatePolicy': '追加导入，不自动去重'})
         if self.command == 'POST' and path == '/api/import': return self.respond(200, {'count':store.add_many(import_xlsx(self.body()))})
         if self.command == 'POST' and path == '/api/contacts': return self.respond(201, store.create(json.loads(self.body())))
         if path.startswith('/api/contacts/'):
