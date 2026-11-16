@@ -29,7 +29,7 @@ python3 app.py
 
 ```bash
 python3 -m unittest discover -s tests -v
-python3 -m py_compile app.py tests/test_app.py
+python3 -m py_compile app.py tests/*.py
 ```
 
 查看真实测试范围和未运行项：[QA 结果](docs/qa-results.md)。课程博客及 PSP 尚需本人补充的材料见 [博客草稿](博客草稿.md) 和 [提交清单](docs/submission-checklist.md)。
