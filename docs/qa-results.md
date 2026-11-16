@@ -35,12 +35,13 @@
 
 ## 命令与环境
 
-- `python3 -m unittest discover -s tests -v`：14 项应用回归测试通过；交付前新增 3 项课程证据文档检查，最终套件共 17 项。
-- `python3 -m py_compile app.py tests/*.py`：通过。
+- `python3 -m unittest discover -s tests -v`：14 项原后端应用回归测试、3 项课程证据检查，以及 3 项静态部署检查通过；最终套件共 20 项。
+- `python3 -m py_compile app.py tests/*.py scripts/build_static.py`：通过。
 - `HTMLParser` 解析 `static/index.html`：通过。
 - 独立构建/打包命令：未配置；无需构建步骤。
 - JavaScript lint / Node `--check`：未运行，本机未安装 Node。页面 JavaScript 已由实际浏览器执行。
-- 手工本地浏览器：使用 Python 服务和合成联系人，完成新建、详情、编辑、收藏、搜索、导出、预览导入、确认导入、刷新和 200+ 列表检查。
+- 手工本地浏览器：Python 服务版使用合成联系人完成新建、详情、编辑、收藏、搜索、导出、预览导入、确认导入、刷新和 200+ 列表检查。
+- 静态发布版浏览器预览：用浏览器本地存储模式新建星标联系人，刷新确认保留；导出 XLSX 后再选择同一文件，预览、确认并查看多电话/邮箱/社交/地址字段；验收数据已删除。只在本地预览验证，尚非线上部署验收。
 
 ## 截图与视频证据
 

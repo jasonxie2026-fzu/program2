@@ -70,7 +70,7 @@
           <p>暂时无法读取联系人，请检查本地服务或数据文件。</p>
           <button class="outline" id="retry-load">重试</button>
         </div>
-        <p class="privacy-note">免登录本地通讯录 · 数据保存在此电脑，可随时导出 Excel 备份。</p>
+        <p class="privacy-note" id="privacy-note">免登录本地通讯录 · 数据保存在此浏览器，可随时导出 Excel 备份。</p>
       </section>
       <footer>人间有信 <span>·</span> 让每一次联系，都有迹可循</footer>
     </main>
@@ -111,6 +111,7 @@
     </div>
   </dialog>
   <div id="toast" role="status" aria-live="polite"></div>
+  <script src="/xlsx.js" defer></script>
   <script src="/app.js" defer></script>
 </body>
 </html>

@@ -25,11 +25,15 @@ python3 app.py
 - 支持 `.xlsx`，不支持 `.xls`；文件大小上限为 5 MB。电话号码应在 Excel 中以文本储存，以避免 Excel 自身的数字格式丢失前导零。
 - 导出把用户值写为 XML inline string，公式样式文本按字串保存。
 
+## 在线版
+
+公开托管版沿用同一界面，但不调用本地 Python API；联系人保存在当前浏览器的 `localStorage`，不会上传到服务器或在不同设备间同步。浏览器存储被清除时数据也会删除，请定期导出 Excel 备份。部署静态资源可运行 `python3 scripts/build_static.py` 生成 `dist/`。在线版本在真正发布并验证后，再补充其访问链接。
+
 ## 测试
 
 ```bash
 python3 -m unittest discover -s tests -v
-python3 -m py_compile app.py tests/*.py
+python3 -m py_compile app.py tests/*.py scripts/build_static.py
 ```
 
 查看真实测试范围和未运行项：[QA 结果](docs/qa-results.md)。课程博客及 PSP 尚需本人补充的材料见 [博客草稿](博客草稿.md) 和 [提交清单](docs/submission-checklist.md)。

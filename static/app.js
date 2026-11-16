@@ -10,9 +10,60 @@ let detailTrigger = null;
 let editorTrigger = null;
 let pendingImport = null;
 let composingSearch = false;
+const staticMode = location.protocol === 'https:' || new URLSearchParams(location.search).get('storage') === 'browser';
+const LOCAL_KEY = 'renjian-addressbook.contacts.v1';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+function localContacts() {
+  const raw = localStorage.getItem(LOCAL_KEY);
+  if (raw === null) return [];
+  const parsed = JSON.parse(raw);
+  if (!Array.isArray(parsed)) throw new Error('本地联系人数据格式异常，未修改现有内容。');
+  return parsed.map(person => ({
+    ...person,
+    id:person.id || crypto.randomUUID(),
+    favorite:!!person.favorite,
+    methods:Array.isArray(person.methods) ? person.methods : [
+      ...(person.phones || []).map(value=>({type:'phone',label:'',value})),
+      ...(person.emails || []).map(value=>({type:'email',label:'',value})),
+      ...(person.address ? [{type:'address',label:'',value:person.address}] : []),
+    ],
+  }));
+}
+function writeLocalContacts(items) {
+  try { localStorage.setItem(LOCAL_KEY, JSON.stringify(items)); }
+  catch { throw new Error('浏览器存储空间不足或不可用。请先导出 Excel 备份并释放空间。'); }
+}
+async function localRequest(url, options = {}) {
+  const path = new URL(url, location.href).pathname;
+  const method = options.method || 'GET';
+  if (path === '/api/contacts' && method === 'GET') return localContacts();
+  if (path === '/api/contacts' && method === 'POST') {
+    const person = JSON.parse(options.body || '{}');
+    if (!person.name?.trim()) throw new Error('请填写联系人姓名。');
+    const items = localContacts();
+    const saved = {...person,id:crypto.randomUUID(),name:person.name.trim()};
+    items.push(saved); writeLocalContacts(items); return saved;
+  }
+  const personMatch = path.match(/^\/api\/contacts\/([^/]+)$/);
+  if (personMatch) {
+    const id = decodeURIComponent(personMatch[1]), items = localContacts(), index = items.findIndex(item=>item.id===id);
+    if (index < 0) throw new Error('找不到这位联系人。');
+    if (method === 'PUT') { const next={...JSON.parse(options.body||'{}'),id}; if(!next.name?.trim()) throw new Error('请填写联系人姓名。'); items[index]=next; writeLocalContacts(items); return next; }
+    if (method === 'DELETE') { items.splice(index,1); writeLocalContacts(items); return {ok:true}; }
+  }
+  if (path === '/api/import/preview' && method === 'POST') {
+    const records=await AddressBookXlsx.importFile(options.body);
+    return {count:records.length,preview:records.slice(0,8).map(person=>({name:person.name,phones:person.phones?.length||0,emails:person.emails?.length||0,favorite:person.favorite})),duplicatePolicy:'追加导入，不自动去重',records};
+  }
+  if (path === '/api/import' && method === 'POST') {
+    const records=await AddressBookXlsx.importFile(options.body), items=localContacts();
+    items.push(...records); writeLocalContacts(items); return {count:records.length};
+  }
+  throw new Error('不支持此操作。');
+}
 async function request(url, options = {}) {
+  if (staticMode) return localRequest(url, options);
   const response = await fetch(url, options);
   let body;
   try { body = await response.json(); } catch { body = {}; }
@@ -352,6 +403,17 @@ byId('export-btn').addEventListener('click', async event => {
   button.disabled = true;
   button.innerHTML = '<span aria-hidden="true">↓</span> 正在导出…';
   try {
+    if (staticMode) {
+      const blob = new Blob([AddressBookXlsx.exportFile(contacts)], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.href = url;
+      link.download = 'contacts.xlsx';
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      toast(`已导出 ${contacts.length} 位联系人`);
+      return;
+    }
     const response = await fetch('/api/export');
     if (!response.ok) throw new Error('导出没有完成，请重试。');
     const blob = await response.blob();
@@ -365,5 +427,8 @@ byId('export-btn').addEventListener('click', async event => {
   } catch (error) { toast(error.message); }
   finally { button.disabled = false; button.innerHTML = '<span aria-hidden="true">↓</span> 导出'; }
 });
+
+if (staticMode) byId('privacy-note').textContent = '公开网页 · 联系人只保存在此浏览器，不会上传或在设备间同步。';
+else byId('privacy-note').textContent = '本地通讯录 · 数据保存在此电脑，可随时导出 Excel 备份。';
 
 refresh();
