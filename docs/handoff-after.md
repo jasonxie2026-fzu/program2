@@ -1,6 +1,6 @@
 # 实施后交接记录
 
-日期：2026-11-16。实现工作在独立目录 `renjian-addressbook` 的本地 `main` 分支完成；原源 zip 没有 Git 元数据。另为公开静态网站创建了独立托管项目，发布结果和远端提交状态以最后一轮验证为准。
+日期：2026-11-16。实现工作在独立目录 `renjian-addressbook` 的本地 `main` 分支完成；原源 zip 没有 Git 元数据。公开静态版已发布到 [在线站点](https://renjian-youxin-addressbook-2026.loneflora4.chatgpt.site)。Sites 源仓库 `main` 分支与线上版本 1 对应提交 `f01ff37c9439be7d8fa33a4953b24109421b1103`；之后的本地交付说明更新不改变站点文件。
 
 ## 修改范围
 
@@ -13,10 +13,11 @@
 
 本地提交按时间排列：`5017943`、`0c208e3`、`a3899b7`、`c3998b8`、`7847a7f`、`667c6a7`。在线发布相关提交与最终 URL 请以最后一次 `git log` 和托管站点状态为准。
 
-- `python3 -m unittest discover -s tests -v`：当前 20 项通过。
+- `python3 -m unittest discover -s tests -v`：21 项通过。
 - `python3 -m py_compile app.py tests/*.py scripts/build_static.py`：通过。
 - 静态打包与 `HTMLParser` 检查：通过。
 - 本地浏览器检查联系人新增、星标、刷新保留、Excel 导出/预览导入；压缩 XLSX、多个电话/邮箱/社交账号/地址通过；测试记录已清理。
+- 公网浏览器打开生产 URL，确认空状态与“仅保存在此浏览器”说明显示；未在公网录入任何联系人。
 - `python3 .agents/skills/renjian-contacts-polish/scripts/repo_probe.py .`：结构探测完成；它不属于功能审计。
 
 ## 数据与线上使用限制
@@ -25,6 +26,7 @@
 - 本机旧 Python 版 `data/contacts.json` 不会自动迁移到网页。需要转入时，在原版导出 Excel，再在新网页预览并确认导入；本次部署没有包含任何真实联系人。
 - 在线版本将在发布成功后补充真实访问 URL。课程教师 GitHub 仓库、Fork、PR/Release 与博客提交仍需本人/团队按要求处理；托管源仓库不代表课程远端。
 - 截图曾在本地浏览器实际查看，但仓库未保存截图或视频文件；按 `docs/demo-script.md` 另行拍摄和录制。
+- 当前开发机没有安装 Node.js，未运行 Sites 提供的 Node 工作流脚本；已用临时 Python/Tar 流程生成部署包，并在推送前核对提交、清洁工作树与包内静态文件，Sites 返回已保存版本，站点记录和公开浏览器确认上线。后续如再次更新托管源，建议安装/提供 Node 后使用官方工作流。
 
 ## 后续课程提交
 

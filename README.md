@@ -27,7 +27,9 @@ python3 app.py
 
 ## 在线版
 
-公开托管版沿用同一界面，但不调用本地 Python API；联系人保存在当前浏览器的 `localStorage`，不会上传到服务器或在不同设备间同步。浏览器存储被清除时数据也会删除，请定期导出 Excel 备份。部署静态资源可运行 `python3 scripts/build_static.py` 生成 `dist/`。在线版本在真正发布并验证后，再补充其访问链接。
+公开托管版沿用同一界面，但不调用本地 Python API；联系人保存在当前浏览器的 `localStorage`，不会上传到服务器或在不同设备间同步。浏览器存储被清除时数据也会删除，请定期导出 Excel 备份。部署静态资源可运行 `python3 scripts/build_static.py` 生成 `dist/`。
+
+在线地址：[人间有信 · 联系人](https://renjian-youxin-addressbook-2026.loneflora4.chatgpt.site)。网站公开可访问；每位访客的通讯录只存在自己的浏览器中，访问其他人的网页不会看到对方联系人。
 
 ## 测试
 

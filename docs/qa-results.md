@@ -35,7 +35,7 @@
 
 ## 命令与环境
 
-- `python3 -m unittest discover -s tests -v`：14 项原后端应用回归测试、3 项课程证据检查，以及 3 项静态部署检查通过；最终套件共 20 项。
+- `python3 -m unittest discover -s tests -v`：14 项原后端应用回归测试、4 项课程证据检查，以及 3 项静态部署检查通过；最终套件共 21 项。
 - `python3 -m py_compile app.py tests/*.py scripts/build_static.py`：通过。
 - `HTMLParser` 解析 `static/index.html`：通过。
 - 独立构建/打包命令：未配置；无需构建步骤。
@@ -46,3 +46,11 @@
 ## 截图与视频证据
 
 本次通过浏览器实际查看了桌面、320px、390px、768px、详情抽屉、编辑表单和 229 条列表画面，但当前截图通道只回显图片，没有可用的项目文件落盘接口。**仓库内没有保存截图文件，也没有演示视频**；不可将其写成已交付的文件。拍摄步骤见 [演示脚本](demo-script.md)。
+
+## 在线静态版
+
+- 地址：[https://renjian-youxin-addressbook-2026.loneflora4.chatgpt.site](https://renjian-youxin-addressbook-2026.loneflora4.chatgpt.site)，公开访问。
+- Sites 记录显示最新发布版本为 1 且 `current_live_url` 已设置；浏览器实际打开后显示空通讯录页面和正确的隐私提示。
+- 线上页面为每个浏览器分别使用 `localStorage`，不会访问本地 Python API；联系人数据没有进入提交或部署包。旧版本的 JSON 联系人未自动迁移。
+- 在线浏览器验证范围是首次打开与空态显示；新建/刷新、Excel 往返和多方式字段在相同静态发布文件的 localhost 预览中通过，未在公网源做第二遍完整交互矩阵。
+- Sites 部署状态单独查询返回“deployment not found”；随后 Sites 站点记录确认版本 1 已有生产 `current_live_url`，且该地址在浏览器可打开。没有独立截图文件。

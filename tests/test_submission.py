@@ -30,6 +30,14 @@ class SubmissionEvidenceTests(unittest.TestCase):
         self.assertIn("仓库内没有保存截图文件", report)
         self.assertIn("没有演示视频", report)
 
+    def test_published_site_and_browser_local_privacy_are_documented(self):
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        qa = (ROOT / "docs/qa-results.md").read_text(encoding="utf-8")
+        url = "https://renjian-youxin-addressbook-2026.loneflora4.chatgpt.site"
+        self.assertIn(url, readme)
+        self.assertIn(url, qa)
+        self.assertIn("不上传", readme)
+
 
 if __name__ == "__main__":
     unittest.main()
