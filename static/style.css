@@ -35,6 +35,7 @@ a { color: inherit; text-decoration: none; }
 .shell { display: grid; grid-template-columns: 252px minmax(0, 1fr); min-height: 100dvh; }
 .sidebar { position: sticky; top: 0; display: flex; flex-direction: column; min-height: 100dvh; padding: 32px 20px 24px; background: #f1f2eb; border-right: 1px solid #e2e2d7; }
 .brand { display: inline-flex; align-items: center; gap: 12px; width: fit-content; color: var(--ink); font-size: 18px; font-weight: 700; letter-spacing: .06em; }
+.envelope-icon { display: inline-block; width: 1em; height: 1em; vertical-align: -.125em; }
 .brand-mark { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 14px; background: var(--ink); color: var(--paper-raised); box-shadow: 0 5px 14px rgb(21 53 47 / 14%); }
 .brand-mark svg { width: 54%; height: 54%; }
 .brand small { display: block; margin-top: 1px; color: var(--muted); font-size: 9px; font-weight: 600; letter-spacing: .2em; }
@@ -49,7 +50,7 @@ a { color: inherit; text-decoration: none; }
 .nav.active { border-color: #d8e2d6; background: #e2eae0; color: var(--ink); }
 .nav.active > span:first-child { color: var(--ink); }
 .side-note { margin-top: auto; padding: 20px 12px 0; color: var(--ink-soft); }
-.side-flower { display: block; margin-bottom: 16px; color: var(--sage); font-size: 36px; }
+.side-envelope { display: block; margin-bottom: 16px; color: var(--sage); font-size: 36px; }
 .side-note strong { font-family: Georgia, "Songti SC", "Noto Serif CJK SC", serif; font-size: 17px; font-weight: 500; line-height: 1.85; }
 .side-note p { margin-top: 8px; color: var(--muted); font-size: 12px; }
 main { width: min(1360px, 100%); min-width: 0; margin: 0 auto; padding: 46px clamp(22px, 4.4vw, 64px) 30px; }
@@ -63,7 +64,7 @@ main { width: min(1360px, 100%); min-width: 0; margin: 0 auto; padding: 46px cla
 .paper-mark::before, .paper-mark::after { position: absolute; left: 26px; right: 26px; height: 1px; background: #d9d3c6; content: ""; }
 .paper-mark::before { top: 77px; box-shadow: 0 23px #d9d3c6, 0 46px #d9d3c6, 0 69px #d9d3c6, 0 92px #d9d3c6; }
 .paper-mark::after { top: 35px; right: auto; width: 38px; height: 38px; border-radius: 50%; background: #e2e9de; }
-.paper-mark span { position: absolute; top: 26px; left: 32px; z-index: 1; color: #527765; font-size: 23px; }
+.paper-mark-icon { position: absolute; top: 42px; left: 33px; z-index: 1; color: #527765; font-size: 24px; }
 .paper-mark i, .paper-mark b { position: absolute; z-index: 2; width: 35px; height: 35px; border: 1px solid #d7a295; border-radius: 50%; background: #fbf1e8; }
 .paper-mark i { right: 31px; top: 58px; }
 .paper-mark b { right: 48px; top: 91px; width: 23px; height: 23px; border-color: #d5bd91; background: #f5eddb; }
@@ -115,7 +116,7 @@ main { width: min(1360px, 100%); min-width: 0; margin: 0 auto; padding: 46px cla
 .star.on { color: var(--coral); }
 .star.on > span:first-child { animation: favorite-pop 260ms var(--ease-out); }
 .empty { min-height: 290px; padding: 48px 20px 42px; text-align: center; }
-.empty-flower { color: #789282; font-size: 38px; animation: flower-breathe 4.5s ease-in-out infinite; }
+.empty-envelope { display: block; margin-inline: auto; color: #789282; font-size: 42px; animation: envelope-breathe 4.5s ease-in-out infinite; }
 .empty h3 { margin: 12px 0 7px; color: var(--ink); font-family: Georgia, "Songti SC", "Noto Serif CJK SC", serif; font-size: 19px; font-weight: 550; }
 .empty p, .muted { margin: 0 0 19px; color: #586e62; font-size: 14px; }
 .load-error { display: grid; justify-items: center; gap: 14px; padding: 50px 20px; text-align: center; }
@@ -196,7 +197,7 @@ dialog::backdrop { background: rgb(21 39 32 / 55%); backdrop-filter: blur(3px); 
 #toast { position: fixed; z-index: 30; bottom: 24px; left: 50%; max-width: min(560px, calc(100vw - 28px)); transform: translate(-50%, 12px); padding: 11px 17px; border: 1px solid rgb(255 255 255 / 22%); border-radius: 13px; background: #183c32; box-shadow: 0 8px 26px rgb(17 38 31 / 20%); color: white; font-size: 14px; opacity: 0; pointer-events: none; transition: opacity 180ms, transform 180ms var(--ease-out); }
 #toast.show { transform: translate(-50%, 0); opacity: 1; }
 @keyframes paper-breathe { from { transform: translate3d(-1%, 0, 0) scale(1); } to { transform: translate3d(1%, -1%, 0) scale(1.035); } }
-@keyframes flower-breathe { 0%, 100% { transform: rotate(0) scale(1); opacity: .7; } 50% { transform: rotate(18deg) scale(1.06); opacity: 1; } }
+@keyframes envelope-breathe { 0%, 100% { transform: rotate(0) scale(1); opacity: .7; } 50% { transform: rotate(6deg) scale(1.06); opacity: 1; } }
 @keyframes favorite-pop { 0% { transform: scale(.85); } 60% { transform: scale(1.22); } 100% { transform: scale(1); } }
 @keyframes dialog-in { from { transform: translateY(10px) scale(.985); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
 @keyframes sheet-in { from { transform: translateX(22px); opacity: .5; } to { transform: translateX(0); opacity: 1; } }

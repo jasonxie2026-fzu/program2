@@ -228,6 +228,7 @@ class Handler(BaseHTTPRequestHandler):
             '/app.js': ('app.js', 'text/javascript; charset=utf-8'),
             '/xlsx.js': ('xlsx.js', 'text/javascript; charset=utf-8'),
             '/favicon.svg': ('favicon.svg', 'image/svg+xml'),
+            '/envelope.svg': ('envelope.svg', 'image/svg+xml'),
         }
         if u.path in files:
             name, kind = files[u.path]

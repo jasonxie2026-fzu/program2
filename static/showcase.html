@@ -32,6 +32,7 @@
     .nav.scrolled{background:#f7f3ebeF;backdrop-filter:blur(18px);border-bottom-color:var(--line);box-shadow:0 6px 40px #344f3e08}
     .nav-inner{height:100%;display:flex;align-items:center;gap:36px}
     .brand{display:flex;align-items:center;gap:12px;white-space:nowrap}
+    .envelope-icon{display:inline-block;width:1em;height:1em;vertical-align:-.125em}
     .brand-symbol{width:40px;height:40px;border:1px solid #c9d0c2;border-radius:50%;display:grid;place-items:center;color:var(--forest);background:#ffffff70}
     .brand-symbol svg{width:58%;height:58%}
     .brand-zh{display:block;font-family:var(--serif);font-weight:700;font-size:19px;letter-spacing:.18em}
@@ -292,10 +293,7 @@
   <div class="wrap nav-inner">
     <a class="brand" href="#top" aria-label="返回人间有信展示页顶部">
       <span class="brand-symbol" aria-hidden="true">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-          <rect x="3" y="5.5" width="18" height="13" rx="2"/>
-          <path d="m4 7 8 6 8-6"/>
-        </svg>
+        <svg class="envelope-icon" viewBox="0 0 24 24" focusable="false"><use href="/envelope.svg#envelope"/></svg>
       </span>
       <span><span class="brand-zh">人间有信</span><span class="brand-en">RENJIAN YOUXIN</span></span>
     </a>
@@ -318,13 +316,20 @@
         <a class="btn-primary" href="/">打开我的通讯录 <span aria-hidden="true">↗</span></a>
         <a class="text-link" href="#features">看看它能做什么 ↓</a>
       </div>
-      <div class="hero-stamp"><div class="stamp-round" aria-hidden="true">✳</div><div class="stamp-copy">YOUR LITTLE BLACK BOOK<br>MADE FOR THE PEOPLE WHO MATTER</div></div>
+      <div class="hero-stamp">
+        <div class="stamp-round" aria-hidden="true"><svg class="envelope-icon" viewBox="0 0 24 24" focusable="false"><use href="/envelope.svg#envelope"/></svg></div>
+        <div class="stamp-copy">YOUR LITTLE BLACK BOOK<br>MADE FOR THE PEOPLE WHO MATTER</div>
+      </div>
     </div>
     <div class="stage" id="demo-stage" aria-label="通讯录模拟交互区域">
       <svg class="orbit" viewBox="0 0 560 560" fill="none" aria-hidden="true"><path d="M67 372 C42 147 183 27 372 76 C522 115 533 298 443 431" stroke="#A1B7A1" stroke-width="1" stroke-dasharray="4 8"/><circle cx="82" cy="213" r="4" fill="#D6B37C"/><circle cx="445" cy="427" r="7" fill="#D58D75" opacity=".7"/><path d="M434 415l10-11 9 10-9 12z" stroke="#D58D75" stroke-width="1"/></svg>
       <div class="float-tag" id="float-tag" aria-hidden="true"><span class="icon">♥</span><span><strong>重要的人 · 永远置顶</strong><small>每一次收藏，都是一种在意</small></span></div>
       <div class="window">
-        <div class="window-head"><div class="traffic" aria-hidden="true"><i></i><i></i><i></i></div><span class="window-label">RENJIAN / CONTACT BOOK</span><span class="window-spark" aria-hidden="true">✳</span></div>
+        <div class="window-head">
+          <div class="traffic" aria-hidden="true"><i></i><i></i><i></i></div>
+          <span class="window-label">RENJIAN / CONTACT BOOK</span>
+          <svg class="envelope-icon window-spark" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/envelope.svg#envelope"/></svg>
+        </div>
         <div class="window-content">
           <div class="window-kicker">A SMALL BOOK OF PEOPLE</div>
           <h2 class="window-title">我的通讯录 <span style="font-size:15px;color:#c2b79a">✦</span></h2>
@@ -366,7 +371,12 @@
     <a class="scroll-cue" href="#features">SCROLL TO EXPLORE</a>
   </section>
 
-  <div class="hairline"><div class="wrap marquee" aria-label="功能概览"><span>✳ 珍藏每一个名字</span><b>✦</b><span>♡ 星标重要的人</span><b>✦</b><span>✉ 多种联系方式</span><b>✦</b><span>↗ Excel 自由备份</span></div></div>
+  <div class="hairline">
+    <div class="wrap marquee" aria-label="功能概览">
+      <span><svg class="envelope-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/envelope.svg#envelope"/></svg> 珍藏每一个名字</span>
+      <b>✦</b><span>♡ 星标重要的人</span><b>✦</b><span>✉ 多种联系方式</span><b>✦</b><span>↗ Excel 自由备份</span>
+    </div>
+  </div>
 
   <section class="section wrap" id="features" aria-labelledby="features-title">
     <div class="section-head reveal">
@@ -381,7 +391,11 @@
         </div>
       </article>
       <article class="feat feat-two reveal"><span class="feat-num">02 — MORE WAYS TO REACH</span><h3>一个名字，<br>好多种联系。</h3><p>电话、邮箱与其他方式，<br>让一份联系更完整。</p>
-        <div class="method-visual" aria-hidden="true"><div class="method-pill"><span class="method-icon">☎</span>电话 · PHONE</div><div class="method-pill"><span class="method-icon">✉</span>邮箱 · EMAIL</div><div class="method-pill"><span class="method-icon">✳</span>其他 · MORE</div></div>
+        <div class="method-visual" aria-hidden="true">
+          <div class="method-pill"><span class="method-icon">☎</span>电话 · PHONE</div>
+          <div class="method-pill"><span class="method-icon"><svg class="envelope-icon" viewBox="0 0 24 24" focusable="false"><use href="/envelope.svg#envelope"/></svg></span>邮箱 · EMAIL</div>
+          <div class="method-pill"><span class="method-icon"><svg class="envelope-icon" viewBox="0 0 24 24" focusable="false"><use href="/envelope.svg#envelope"/></svg></span>其他 · MORE</div>
+        </div>
       </article>
       <article class="feat feat-three reveal"><span class="feat-num">03 — KEEP WHAT MATTERS</span><h3>名单在手，<br>安心备份。</h3><p>支持 Excel 导入与导出，<br>把重要的记录妥善带走。</p>
         <div class="sheet-visual" aria-hidden="true"><div class="sheet-top"><span>CONTACTS / BACKUP</span><span class="sheet-badge">XLSX ↗</span></div><div class="sheet-cell"><span>姓名</span><span>电话</span><span>邮箱</span></div><div class="sheet-cell"><span>周予安</span><span>138 ···</span><span>···@example</span></div><div class="sheet-cell"><span>林知夏</span><span>136 ···</span><span>···@example</span></div></div>
@@ -409,7 +423,10 @@
     <small>RENJIAN YOUXIN · YOUR LITTLE BLACK BOOK</small>
   </div></section>
 </main>
-<footer class="wrap footer"><strong>✳ 人间有信</strong><span>SOFTWARE ENGINEERING · EXTREME PROGRAMMING · PROJECT SHOWCASE</span><span>温柔地，记得每一个名字。</span></footer>
+<footer class="wrap footer">
+  <strong><svg class="envelope-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/envelope.svg#envelope"/></svg> 人间有信</strong>
+  <span>SOFTWARE ENGINEERING · EXTREME PROGRAMMING · PROJECT SHOWCASE</span><span>温柔地，记得每一个名字。</span>
+</footer>
 
 <script>
 (() => {

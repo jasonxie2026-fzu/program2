@@ -13,10 +13,7 @@
     <aside class="sidebar">
       <a class="brand" href="/" aria-label="人间有信通讯录首页">
         <span class="brand-mark" aria-hidden="true">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-            <rect x="3" y="5.5" width="18" height="13" rx="2"/>
-            <path d="m4 7 8 6 8-6"/>
-          </svg>
+          <svg class="envelope-icon" viewBox="0 0 24 24" focusable="false"><use href="/envelope.svg#envelope"/></svg>
         </span>
         <span>人间有信<small>CONTACT BOOK</small></span>
       </a>
@@ -26,7 +23,7 @@
         <button class="nav" data-filter="favorites" aria-pressed="false"><span aria-hidden="true">♡</span><span>星标联系人</span><b id="favorite-count">0</b></button>
       </nav>
       <div class="side-note">
-        <span class="side-flower" aria-hidden="true">✦</span>
+        <svg class="envelope-icon side-envelope" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/envelope.svg#envelope"/></svg>
         <strong>把重要的人，<br>好好留在身边。</strong>
         <p>一份简单、安静的通讯录。</p>
       </div>
@@ -40,11 +37,16 @@
           <p id="subtitle">所有值得记住的人，都在这里。</p>
         </div>
         <button id="add" class="primary"><span aria-hidden="true">＋</span> 新建联系人</button>
-        <div class="paper-mark" aria-hidden="true"><span>✳</span><i></i><b></b></div>
+        <div class="paper-mark" aria-hidden="true">
+          <svg class="envelope-icon paper-mark-icon" viewBox="0 0 24 24" focusable="false"><use href="/envelope.svg#envelope"/></svg><i></i><b></b>
+        </div>
       </header>
 
       <section class="summary" aria-label="通讯录统计">
-        <div class="stat"><span class="summary-icon" aria-hidden="true">✳</span><span><small>联系人总数</small><strong id="summary-total">0</strong></span></div>
+        <div class="stat">
+          <span class="summary-icon" aria-hidden="true"><svg class="envelope-icon" viewBox="0 0 24 24" focusable="false"><use href="/envelope.svg#envelope"/></svg></span>
+          <span><small>联系人总数</small><strong id="summary-total">0</strong></span>
+        </div>
         <div class="stat"><span class="summary-icon favorite-icon" aria-hidden="true">♡</span><span><small>星标联系人</small><strong id="summary-star">0</strong></span></div>
         <p class="summary-note">人与人之间的连接，<br>从一个名字开始。</p>
       </section>
@@ -66,7 +68,7 @@
         <div class="table-head" aria-hidden="true"><span>联系人</span><span>常用联系方式</span><span>公司 / 备注</span><span></span></div>
         <div id="list" class="contact-list" role="list"></div>
         <div id="empty" class="empty" hidden>
-          <div class="empty-flower" aria-hidden="true">✳</div>
+          <svg class="envelope-icon empty-envelope" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/envelope.svg#envelope"/></svg>
           <h3>这里还是空的</h3>
           <p>添加一位联系人，让故事从这里开始。</p>
           <button class="outline" id="empty-add"><span aria-hidden="true">＋</span> 新建联系人</button>

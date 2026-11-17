@@ -11,7 +11,7 @@ class StaticDeploymentTests(unittest.TestCase):
     def test_static_build_contains_all_runtime_assets(self):
         with tempfile.TemporaryDirectory() as temporary:
             output = build(Path(temporary) / "dist")
-            for name in ("index.html", "showcase.html", "app.js", "xlsx.js", "style.css", "favicon.svg"):
+            for name in ("index.html", "showcase.html", "app.js", "xlsx.js", "style.css", "favicon.svg", "envelope.svg"):
                 with self.subTest(asset=name):
                     self.assertTrue((output / name).is_file())
             manifest = output / ".openai/hosting.json"
@@ -53,24 +53,28 @@ class StaticDeploymentTests(unittest.TestCase):
         html = (root / "static/index.html").read_text(encoding="utf-8")
         self.assertIn('href="/showcase.html"', html)
 
-    def test_built_pages_use_the_envelope_brand_mark(self):
+    def test_built_pages_use_envelopes_in_place_of_flower_icons(self):
         with tempfile.TemporaryDirectory() as temporary:
             output = build(Path(temporary) / "dist")
-            for filename, brand_class in (
-                ("index.html", "brand-mark"),
-                ("showcase.html", "brand-symbol"),
+            for filename, envelope_count in (
+                ("index.html", 5),
+                ("showcase.html", 7),
             ):
                 with self.subTest(page=filename):
                     html = (output / filename).read_text(encoding="utf-8")
-                    start = f'<span class="{brand_class}" aria-hidden="true">'
-                    mark = ElementTree.fromstring(html.split(start, 1)[1].split("</span>", 1)[0].strip())
-                    self.assertEqual(mark.tag, "svg")
-                    self.assertIsNotNone(mark.find("rect"))
-                    self.assertEqual(mark.find("path").get("d"), "m4 7 8 6 8-6")
+                    self.assertNotIn("✳", html)
+                    self.assertNotIn("side-flower", html)
+                    self.assertNotIn("empty-flower", html)
+                    self.assertEqual(html.count('<use href="/envelope.svg#envelope"/>'), envelope_count)
                     self.assertIn('href="/favicon.svg"', html)
 
-            favicon = ElementTree.parse(output / "favicon.svg")
             namespace = {"svg": "http://www.w3.org/2000/svg"}
+            sprite = ElementTree.parse(output / "envelope.svg")
+            envelope = sprite.find("svg:symbol[@id='envelope']", namespace)
+            self.assertIsNotNone(envelope)
+            self.assertIsNotNone(envelope.find("svg:rect", namespace))
+            self.assertEqual(envelope.find("svg:path", namespace).get("d"), "m4 7 8 6 8-6")
+            favicon = ElementTree.parse(output / "favicon.svg")
             self.assertIsNotNone(favicon.find("svg:g/svg:rect", namespace))
             self.assertIsNotNone(favicon.find("svg:g/svg:path", namespace))
 

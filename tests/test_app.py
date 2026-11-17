@@ -139,15 +139,17 @@ class AddressBookTests(unittest.TestCase):
         self.assertEqual(len(self.store.list('联系人22')), 5)
         self.assertEqual(len(self.store.list(favorites=True)), 75)
 
-    def test_brand_favicon_is_served_without_external_requests(self):
-        handler = object.__new__(Handler)
-        handler.path = '/favicon.svg'
-        response = []
-        handler.respond = lambda status, data, kind='application/json; charset=utf-8', **kwargs: response.append((status, data, kind))
-        handler.do_GET()
-        self.assertEqual(response[0][0], 200)
-        self.assertEqual(response[0][2], 'image/svg+xml')
-        self.assertIn(b'<svg', response[0][1])
+    def test_local_server_serves_the_favicon_and_envelope_sprite(self):
+        for route, shape in (('/favicon.svg', b'<svg'), ('/envelope.svg', b'<symbol id="envelope"')):
+            with self.subTest(route=route):
+                handler = object.__new__(Handler)
+                handler.path = route
+                with patch.object(handler, 'respond') as respond:
+                    handler.do_GET()
+                status, body, content_type = respond.call_args.args
+                self.assertEqual(status, 200)
+                self.assertEqual(content_type, 'image/svg+xml')
+                self.assertIn(shape, body)
 
     def test_python_server_serves_the_excel_script_referenced_by_the_page(self):
         handler = object.__new__(Handler)
