@@ -1,4 +1,12 @@
-# 人间有信｜本地通讯录
+# 人间有信｜修改后版
+
+> 本地项目版本为**修改后版**，课程分工对应 `jasonxie2026-fzu`。源版本 `abe3a38`。
+>
+> [最终公开版通讯录](https://joyful-centaur-da2325.netlify.app/) · [最终公开版展示页](https://joyful-centaur-da2325.netlify.app/showcase.html)
+>
+> [作业要求](https://bbs.csdn.net/topics/620593436) · [课程 GitHub 仓库](https://github.com/jasonxie2026-fzu/program2)
+
+在修改前版上统一星标图案与动画。通讯录和展示页共同使用 `static/motion.css`，原生详情抽屉保留键盘关闭和焦点恢复。
 
 「把重要的人，好好留在身边。」这个通讯录支持联系人管理、星标、搜索、多种联系方式和 Excel 导入导出。Python 版将数据保存在本机的 `data/contacts.json`，在线版将数据保存在当前浏览器。
 
@@ -29,7 +37,7 @@ python3 app.py
 
 公开托管版沿用同一界面。联系人数据只保存在当前浏览器的 `localStorage`，不上传到服务器，也不会在不同设备间同步。浏览器存储被清除时数据也会删除，请定期导出 Excel 备份。部署静态资源可运行 `python3 scripts/build_static.py` 生成 `dist/`。
 
-在线地址：[人间有信 · 联系人](https://renjian-youxin-addressbook-2026.loneflora4.chatgpt.site)。网站公开可访问；每位访客的通讯录只存在自己的浏览器中，访问其他人的网页不会看到对方联系人。
+最终网址：[人间有信 · 联系人](https://joyful-centaur-da2325.netlify.app/)。展示页使用虚构的联系人，互动状态只留在展示页内存。
 
 ## 测试
 
@@ -42,4 +50,5 @@ python3 -m py_compile app.py tests/*.py scripts/build_static.py
 
 - [代码规范与 Git 协作](CODE_STANDARDS.md)
 - [QA 结果](docs/qa-results.md)和[演示步骤](docs/demo-script.md)
-- [提交清单](docs/submission-checklist.md)、[个人博客底稿](博客草稿.md)和 [PSP 记录表](docs/psp-template.md)
+- [本版 CSDN 博客](博客草稿.md)、[个人 PSP](docs/psp-jasonxie2026-fzu.md)
+- [提交清单](docs/submission-checklist.md)、[Git 记录及发布说明](docs/course-git.md)、[运行截图与视频](docs/evidence/)
