@@ -2,6 +2,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from xml.etree import ElementTree
 
 from scripts.build_static import build
 
@@ -51,6 +52,27 @@ class StaticDeploymentTests(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         html = (root / "static/index.html").read_text(encoding="utf-8")
         self.assertIn('href="/showcase.html"', html)
+
+    def test_built_pages_use_the_envelope_brand_mark(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            output = build(Path(temporary) / "dist")
+            for filename, brand_class in (
+                ("index.html", "brand-mark"),
+                ("showcase.html", "brand-symbol"),
+            ):
+                with self.subTest(page=filename):
+                    html = (output / filename).read_text(encoding="utf-8")
+                    start = f'<span class="{brand_class}" aria-hidden="true">'
+                    mark = ElementTree.fromstring(html.split(start, 1)[1].split("</span>", 1)[0].strip())
+                    self.assertEqual(mark.tag, "svg")
+                    self.assertIsNotNone(mark.find("rect"))
+                    self.assertEqual(mark.find("path").get("d"), "m4 7 8 6 8-6")
+                    self.assertIn('href="/favicon.svg"', html)
+
+            favicon = ElementTree.parse(output / "favicon.svg")
+            namespace = {"svg": "http://www.w3.org/2000/svg"}
+            self.assertIsNotNone(favicon.find("svg:g/svg:rect", namespace))
+            self.assertIsNotNone(favicon.find("svg:g/svg:path", namespace))
 
 
 if __name__ == "__main__":
