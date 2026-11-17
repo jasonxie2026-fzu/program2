@@ -2,7 +2,7 @@
 
 > 本地项目版本为**修改后版**，课程分工对应 `jasonxie2026-fzu`。源版本 `abe3a38`。
 >
-> [最终公开版通讯录](https://joyful-centaur-da2325.netlify.app/) · [最终公开版展示页](https://joyful-centaur-da2325.netlify.app/showcase.html)
+> [最终公开版通讯录](https://joyful-centaur-da2325.netlify.app/) · [最终公开版展示页](https://joyful-centaur-da2325.netlify.app/showcase.html) · [下载正式版 v1.0.0](https://github.com/jasonxie2026-fzu/program2/releases/tag/v1.0.0)
 >
 > [作业要求](https://bbs.csdn.net/topics/620593436) · [课程 GitHub 仓库](https://github.com/jasonxie2026-fzu/program2)
 
