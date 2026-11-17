@@ -1,27 +1,24 @@
 # 极限编程作业提交清单
 
-课程为 EE308FZ Software Engineering（2601_FZU-MU_SE）。截止时间为 **2026 年 11 月 17 日 23:59（北京时间）**。两人分别提交自己的博客链接，给审核预留时间。 [作业原帖](https://bbs.csdn.net/topics/620593436)
+团队为「人间有信」。本包为修改前版，对应 `hoangthithang880-dotcom`。两人分别发布自己的 CSDN 博客。原帖截止时间为 2026 年 11 月 17 日 23:59。 [作业要求](https://bbs.csdn.net/topics/620593436)
 
-## 共享仓库
+| 作业项 | 材料 |
+| --- | --- |
+| 可运行源码及启动方式 | [README](../README.md) |
+| 代码规范与 GitHub | [代码规范](../CODE_STANDARDS.md) · [课程仓库](https://github.com/jasonxie2026-fzu/program2) |
+| 作业信息表、目录、实现、分工和 50% / 50% | [本版 CSDN 博客](../博客草稿.md) |
+| 每人一张 PSP | [本版作者 PSP](psp-hoangthithang880-dotcom.md)。计划为回顾估算，实际工时待本人核对。 |
+| 功能截图与完整运行视频 | [运行画面](evidence/) · [50 秒视频](evidence/address-book-demo.mp4) |
+| Git 提交历史 | [文本日志](evidence/github-main-history.txt) · [GitHub Commits](https://github.com/jasonxie2026-fzu/program2/commits/main/) |
+| PR、Release 说明 | [说明底稿](course-git.md)，待创建后补真实链接。 |
+| 线上验收 | [最终公开通讯录](https://joyful-centaur-da2325.netlify.app/) · [最终公开展示页](https://joyful-centaur-da2325.netlify.app/showcase.html) |
 
-- [x] 可运行的源码、启动说明、自动化测试、[代码规范](../CODE_STANDARDS.md)和[实现说明](design-decisions.md)。
-- [x] 已有[公开静态演示地址](https://renjian-youxin-addressbook-2026.loneflora4.chatgpt.site)。是否计入云服务器加分，以助教认可为准。
-- [ ] 创建团队自己的 GitHub 仓库，推送现有 `main`，邀请队友接受协作权限，核对助教可以访问。
-- [ ] 两人各自用关联本人 GitHub 账号的 Git 身份完成实际代码改动。仓库合计至少 3 个 commit，按真实作者分别统计。
-- [ ] 由功能分支向共享仓库 `main` 发起 Pull Request，记录验证结果和队友审查。合并后对实际交付代码发一个 Release（例如 `v1.0.0`）。
+## 发布前
 
-## 两篇个人博客
+- [ ] 核对 GitHub 仓库开放给老师查阅。两人按真实作者整理提交次数，并把 GitHub Commits 的截图上传到博客。
+- [ ] 确认协作经过，按个人真实记录填 PSP，核对各自贡献。
+- [ ] 按原帖发起 PR 和发布 Release，把真实链接填到 README 或博客相应位置。
+- [ ] 上传截图与视频，替换博客中的相对路径，在 CSDN 预览确认资料能打开。
+- [ ] 两人分别在 CSDN 发布个人文章，按 [作业帖](https://bbs.csdn.net/topics/620593436) 要求提交链接。
 
-- [x] [共享 Markdown 底稿](../博客草稿.md)和[每人一张的 PSP 表](psp-template.md)已准备。
-- [x] [真实运行截图](evidence/)与[完整分步演示视频](evidence/address-book-demo.mp4)已准备，使用虚构资料。
-- [ ] 把团队仓库、代码规范、PR、Release 链接填到博客；在 GitHub 的 Commits 页面保存真实历史截图，填写两人的提交数。
-- [ ] 将程序截图和演示视频插入两篇博客并检查访问和播放。 [演示步骤](demo-script.md)
-- [ ] 按真实记录填写成员、分工、贡献比例（两人合计 100%）、遇到的协作问题及解决办法，并分别填写 PSP 表中的计划和实际耗时。
-- [ ] 每人在[课程社区](https://bbs.csdn.net/forums/2601_MU_SE_FZU)发布自己的博客，然后分别在[作业帖](https://bbs.csdn.net/topics/620593436)提交自己的已发布链接。
-
-## 独立作品展示页
-
-- [x] 新增独立 `/showcase.html`，真实通讯录仍位于 `/`；展示 CTA 返回真实通讯录。
-- [x] 使用明确标注的虚构联系人；收藏与筛选只在展示页内存运行，不连接真实数据或浏览器持久化。
-- [x] 原生 HTML/CSS/JavaScript，无新增依赖；支持减少动态、键盘切换筛选、Escape 关闭详情和焦点恢复。已发布到公开站点版本 2，直接访问 `/showcase` 与刷新通过。
-- [ ] 从真实页面导出 Showcase 桌面与移动端截图至 `docs/evidence/` 并插入个人博客；当前会话截图可见但未生成证据文件。
+公开静态部署可用于演示，是否满足选做云部署加分由课程认定。
