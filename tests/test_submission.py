@@ -16,6 +16,9 @@ class SubmissionEvidenceTests(unittest.TestCase):
             "docs/psp-template.md",
             "docs/handoff-after.md",
             "博客草稿.md",
+            "docs/psp-jasonxie2026-fzu.md",
+            "docs/course-git.md",
+            "docs/evidence/github-main-history.txt",
         ):
             with self.subTest(path=relative):
                 self.assertTrue((ROOT / relative).is_file())
@@ -25,10 +28,12 @@ class SubmissionEvidenceTests(unittest.TestCase):
         self.assertIn("实际代码与分工", blog)
         self.assertIn("贡献比例", blog)
         self.assertIn("PSP", blog)
-        self.assertIn("粘贴实际仓库地址", blog)
-        self.assertIn("粘贴共享仓库 Commits 页面截图", blog)
-        self.assertIn("粘贴实际 PR 地址", blog)
-        self.assertIn("粘贴实际发布版本地址", blog)
+        self.assertIn("jasonxie2026-fzu", blog)
+        self.assertEqual(blog.count("50%"), 2)
+        self.assertIn("https://github.com/jasonxie2026-fzu/program2", blog)
+        self.assertIn("补一张 GitHub Commits 页面截图", blog)
+        self.assertIn("待在 GitHub 创建后补链接", blog)
+        self.assertIn("待在 GitHub 发布后补链接", blog)
 
     def test_demo_images_and_video_are_present_and_linked(self):
         blog = (ROOT / "博客草稿.md").read_text(encoding="utf-8")
@@ -52,13 +57,17 @@ class SubmissionEvidenceTests(unittest.TestCase):
         checklist = (ROOT / "docs/submission-checklist.md").read_text(encoding="utf-8")
         self.assertIn("(CODE_STANDARDS.md)", readme)
         self.assertIn("(docs/submission-checklist.md)", readme)
-        self.assertIn("创建团队自己的 GitHub 仓库", checklist)
+        self.assertIn("GitHub Commits", checklist)
         self.assertIn("(../CODE_STANDARDS.md)", checklist)
 
     def test_published_site_and_browser_local_privacy_are_documented(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         qa = (ROOT / "docs/qa-results.md").read_text(encoding="utf-8")
-        url = "https://renjian-youxin-addressbook-2026.loneflora4.chatgpt.site"
+        url = "https://joyful-centaur-da2325.netlify.app"
+        blog = (ROOT / "博客草稿.md").read_text(encoding="utf-8")
+        self.assertIn(url + "/", blog)
+        self.assertIn(url + "/showcase.html", blog)
+        self.assertIn(url + "/showcase.html", readme)
         self.assertIn(url, readme)
         self.assertIn(url, qa)
         self.assertIn("不上传", readme)

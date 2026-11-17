@@ -1,11 +1,11 @@
 ---
 name: renjian-contacts-polish
-description: Audit and progressively enhance the existing Chinese "人间有信" contacts/address-book application for a 2026 software-engineering Extreme Programming assignment. Use when Codex is asked to improve the site's frontend visual design, animated background, micro-interactions, responsive UX, favorites, multi-contact methods, Excel import/export, testing, or submission evidence while preserving the assignment rubric and existing data.
+description: Audit and progressively enhance the existing Chinese "人间有信" contacts/address-book application for a 2026 software-engineering Extreme Programming assignment. Use when Codex is asked to improve the site's frontend visual design, animated background, micro-interactions, responsive UX, favorites, multi-contact methods, Excel import/export, testing, independent `/showcase` product-showcase integration, or submission evidence while preserving the assignment rubric, existing user data, and real contacts functionality.
 ---
 
 # 人间有信：作业优先的前端升级
 
-目的：先确保老师的评分项和已有数据不被破坏，再打造温暖、克制但丰富的动效体验；不要把通讯录重写成无功能的展示页。
+目的：先确保老师的评分项和已有数据不被破坏，再打造温暖、克制但丰富的动效体验；**主通讯录不能被纯展示页替代**。如用户要求增加作品展示页，则应将其实现为与真实通讯录隔离的独立路由。
 
 ## 开始工作
 
@@ -15,7 +15,8 @@ description: Audit and progressively enhance the existing Chinese "人间有信"
 4. 如果当前项目不是 React，**不得仅为使用 React Bits/Magic UI/shadcn 迁移框架**。看 `references/github-research.md` 的条件分支；优先 CSS 与当前技术栈。如果是 React 并已装 Tailwind，可按需引入少量高星组件。
 5. 先验证：星标联系人可标记、撤销、筛选且刷新持久；单个联系人能持有多个电话/邮箱等方式；Excel 导出一人一行、各字段分列且可重新导入。若基线不满足，先修复功能再做视觉升级。
 6. 读取 `references/design-system.md`、`references/motion-spec.md`，逐项升级布局、空状态、联系人卡片、搜索、详情、编辑、表单、导入导出反馈。每一项动效都要有用途、减弱动态模式和低性能退化。
-7. 按 `references/acceptance-tests.md` 验收，用真实交互或自动化测试证明通过。完成后依 `references/submission.md` 产出作业证据（不伪造提交、PR、发布或测试结果）。
+7. 如果要求作品展示页，按 `references/showcase-integration.md` 将随交接包的 HTML 原型适配成独立 `/showcase` 或等价路径。必须隔离示例联系人数据与真实联系人数据；CTA 返回真正通讯录。
+8. 按 `references/acceptance-tests.md` 验收，用真实交互或自动化测试证明通过。完成后依 `references/submission.md` 产出作业证据（不伪造提交、PR、发布或测试结果）。
 
 ## 强制约束
 
@@ -37,7 +38,9 @@ description: Audit and progressively enhance the existing Chinese "人间有信"
 
 **阶段 3 微交互 + 背景**：先 CSS 静态背景与微交互，再根据性能预算增加 **一个** 克制的背景动效；保留无动画样式、降级逻辑，逐页验证。
 
-**阶段 4 验收与作业证据**：真实测试、截图/录像建议、Git 变更摘要、待用户完成事项。不要为了得分宣称静态托管在任意域名一定符合“云服务器”加分规则，部署后应向老师确认。
+**阶段 4 独立展示页**：若用户要求，阅读 `references/showcase-integration.md` 和 `references/ui-reference-catalog.md`，在保持主应用入口不变的前提下将独立原型集成到路由。
+
+**阶段 5 验收与作业证据**：真实测试、截图/录像建议、Git 变更摘要、待用户完成事项。不要为了得分宣称静态托管在任意域名一定符合“云服务器”加分规则，部署后应向老师确认。
 
 ## 输出格式
 
@@ -52,6 +55,8 @@ description: Audit and progressively enhance the existing Chinese "人间有信"
 - `references/excel-contract.md`：数据模型、导入导出与兼容规则
 - `references/acceptance-tests.md`：功能、视觉、性能的验收用例
 - `references/submission.md`：课程提交材料和博客结构
+- `references/showcase-integration.md`：新增独立展示页、模拟数据隔离和 CTA 验收
+- `references/ui-reference-catalog.md`：六大网站具体组件和分场景选型
 - `assets/tokens.example.css`：可按现有技术栈改写的设计 token 示范，不能无脑替换全局样式
 
 ## Skill collaboration

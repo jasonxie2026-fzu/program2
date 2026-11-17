@@ -6,22 +6,25 @@
   <meta name="theme-color" content="#f7f3eb">
   <title>人间有信 · 通讯录</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/motion.css">
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
   <div class="shell">
     <aside class="sidebar">
       <a class="brand" href="/" aria-label="人间有信通讯录首页">
-        <span class="brand-mark" aria-hidden="true">✳</span>
+        <span class="brand-mark" aria-hidden="true">
+          <svg class="envelope-icon" viewBox="0 0 24 24" focusable="false"><use href="/envelope.svg#envelope"/></svg>
+        </span>
         <span>人间有信<small>CONTACT BOOK</small></span>
       </a>
       <p class="side-label">我的通讯录</p>
       <nav aria-label="联系人视图">
         <button class="nav active" data-filter="all" aria-pressed="true"><span aria-hidden="true">▦</span><span>全部联系人</span><b id="all-count">0</b></button>
-        <button class="nav" data-filter="favorites" aria-pressed="false"><span aria-hidden="true">♡</span><span>星标联系人</span><b id="favorite-count">0</b></button>
+        <button class="nav" data-filter="favorites" aria-pressed="false"><span aria-hidden="true">☆</span><span>星标联系人</span><b id="favorite-count">0</b></button>
       </nav>
       <div class="side-note">
-        <span class="side-flower" aria-hidden="true">✦</span>
+        <svg class="envelope-icon side-envelope" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/envelope.svg#envelope"/></svg>
         <strong>把重要的人，<br>好好留在身边。</strong>
         <p>一份简单、安静的通讯录。</p>
       </div>
@@ -35,12 +38,17 @@
           <p id="subtitle">所有值得记住的人，都在这里。</p>
         </div>
         <button id="add" class="primary"><span aria-hidden="true">＋</span> 新建联系人</button>
-        <div class="paper-mark" aria-hidden="true"><span>✳</span><i></i><b></b></div>
+        <div class="paper-mark" aria-hidden="true">
+          <svg class="envelope-icon paper-mark-icon" viewBox="0 0 24 24" focusable="false"><use href="/envelope.svg#envelope"/></svg><i></i><b></b>
+        </div>
       </header>
 
       <section class="summary" aria-label="通讯录统计">
-        <div class="stat"><span class="summary-icon" aria-hidden="true">✳</span><span><small>联系人总数</small><strong id="summary-total">0</strong></span></div>
-        <div class="stat"><span class="summary-icon favorite-icon" aria-hidden="true">♡</span><span><small>星标联系人</small><strong id="summary-star">0</strong></span></div>
+        <div class="stat">
+          <span class="summary-icon" aria-hidden="true"><svg class="envelope-icon" viewBox="0 0 24 24" focusable="false"><use href="/envelope.svg#envelope"/></svg></span>
+          <span><small>联系人总数</small><strong id="summary-total">0</strong></span>
+        </div>
+        <div class="stat"><span class="summary-icon favorite-icon" aria-hidden="true">☆</span><span><small>星标联系人</small><strong id="summary-star">0</strong></span></div>
         <p class="summary-note">人与人之间的连接，<br>从一个名字开始。</p>
       </section>
 
@@ -61,7 +69,7 @@
         <div class="table-head" aria-hidden="true"><span>联系人</span><span>常用联系方式</span><span>公司 / 备注</span><span></span></div>
         <div id="list" class="contact-list" role="list"></div>
         <div id="empty" class="empty" hidden>
-          <div class="empty-flower" aria-hidden="true">✳</div>
+          <svg class="envelope-icon empty-envelope" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/envelope.svg#envelope"/></svg>
           <h3>这里还是空的</h3>
           <p>添加一位联系人，让故事从这里开始。</p>
           <button class="outline" id="empty-add"><span aria-hidden="true">＋</span> 新建联系人</button>
@@ -72,7 +80,7 @@
         </div>
         <p class="privacy-note" id="privacy-note">免登录本地通讯录 · 数据保存在此浏览器，可随时导出 Excel 备份。</p>
       </section>
-      <footer>人间有信 <span>·</span> 让每一次联系，都有迹可循</footer>
+      <footer>人间有信 <span>·</span> 让每一次联系，都有迹可循 <span>·</span> <a href="/showcase.html">作品介绍</a></footer>
     </main>
   </div>
 
@@ -96,7 +104,7 @@
         <label>公司<input name="company" autocomplete="organization" placeholder="工作单位或组织"></label>
         <label class="wide">备注<textarea name="note" rows="3" placeholder="写点什么，方便以后想起来"></textarea></label>
       </div>
-      <label class="favorite-toggle"><input type="checkbox" name="favorite"><span class="favorite-heart" aria-hidden="true">♡</span><span>加入星标联系人</span></label>
+      <label class="favorite-toggle"><input type="checkbox" name="favorite"><span>加入星标联系人</span></label>
       <div class="modal-actions"><button type="button" class="outline danger" id="delete-contact" hidden>删除联系人</button><span class="spacer"></span><button type="button" class="outline" id="cancel-editor">取消</button><button class="primary" type="submit">保存联系人</button></div>
     </form>
   </dialog>

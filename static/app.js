@@ -183,16 +183,25 @@ function showDetails(person, trigger = document.activeElement, open = true) {
     <section class="detail-section"><h3>公司与备注</h3><dl class="detail-meta"><div><dt>公司</dt><dd>${esc(person.company || '—')}</dd></div><div><dt>备注</dt><dd>${esc(person.note || '—')}</dd></div></dl></section>`;
   if (open) byId('detail-dialog').showModal();
 }
+function getDetailTrigger() {
+  if (detailTrigger?.isConnected) return detailTrigger;
+  const replacement = byId('list').querySelector(`[data-open="${CSS.escape(detailId)}"]`);
+  return replacement || document.querySelector('.nav.active') || byId('add');
+}
 async function saveFavorite(person) {
   try {
-    const fromDetails = byId('detail-dialog').open && detailId === person.id;
+    const detail = byId('detail-dialog');
+    const fromDetails = detail.open && detailId === person.id;
     await request(`/api/contacts/${encodeURIComponent(person.id)}`, {method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({...person, favorite:!person.favorite})});
     await refresh();
-    if (fromDetails) byId('detail-panel').querySelector('[data-detail-favorite]')?.focus();
-    else {
-      const replacement = byId('list').querySelector(`[data-star="${person.id}"]`);
-      if (replacement) replacement.focus();
-      else document.querySelector(`.nav[data-filter="${filter}"]`)?.focus();
+    if (fromDetails && detail.open && detailId === person.id) {
+      const button = byId('detail-panel').querySelector('[data-detail-favorite]');
+      button.classList.add('pop');
+      button.focus({preventScroll:true});
+    } else if (!fromDetails && !detail.open && !byId('editor-dialog').open && !byId('import-dialog').open) {
+      const replacement = byId('list').querySelector(`[data-star="${CSS.escape(person.id)}"]`);
+      replacement?.classList.add('pop');
+      (replacement || document.querySelector('.nav.active'))?.focus({preventScroll:true});
     }
     toast(person.favorite ? '已取消星标' : '已加入星标');
   } catch (error) { toast(error.message); }
@@ -309,10 +318,15 @@ byId('search').addEventListener('compositionstart', () => { composingSearch = tr
 byId('search').addEventListener('compositionend', () => { composingSearch = false; render(); });
 byId('search').addEventListener('input', () => { if (!composingSearch) render(); });
 byId('retry-load').addEventListener('click', refresh);
+byId('detail-dialog').addEventListener('close', event => {
+  if (!event.currentTarget.open && !byId('editor-dialog').open) {
+    getDetailTrigger().focus({preventScroll:true});
+  }
+});
 byId('detail-panel').addEventListener('click', event => {
   if (event.target.closest('[data-close-detail]')) {
     byId('detail-dialog').close();
-    if (detailTrigger?.isConnected) detailTrigger.focus();
+    return;
   }
   if (event.target.closest('[data-detail-favorite]')) {
     const person = contacts.find(item => item.id === detailId);
@@ -320,8 +334,9 @@ byId('detail-panel').addEventListener('click', event => {
   }
   if (event.target.closest('[data-edit-contact]')) {
     const person = contacts.find(item => item.id === detailId);
+    const trigger = getDetailTrigger();
     byId('detail-dialog').close();
-    if (person) openEditor(person, detailTrigger);
+    if (person) openEditor(person, trigger);
   }
   const copy = event.target.closest('[data-copy]');
   if (copy) copyValue(copy.dataset.copy);

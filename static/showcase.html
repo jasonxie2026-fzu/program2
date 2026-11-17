@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f3eb">
+  <meta name="description" content="人间有信——一份简单、安静、有温度的通讯录。把重要的人，好好留在身边。">
+  <title>人间有信 · 把重要的人，好好留在身边</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/motion.css">
+  <style>
+    :root {
+      --paper:#f7f3eb; --ivory:#fffefa; --ink:#24433b; --forest:#1e3f38;
+      --sage:#9db7a6; --sage-light:#e7eee6; --coral:#d98974;
+      --gold:#d8b67d; --line:#e4dfd5; --muted:#71827c;
+      --serif:"Songti SC","STSong","Noto Serif CJK SC",serif;
+      --sans:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",system-ui,sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:96px;overflow-x:clip}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+    button,a,input{font:inherit}
+    button{cursor:pointer}
+    a{color:inherit;text-decoration:none}
+    button:focus-visible,a:focus-visible{outline:3px solid var(--coral);outline-offset:4px}
+    ::selection{background:#e8d8b8;color:#203e35}
+    .texture{pointer-events:none;position:fixed;inset:0;z-index:60;opacity:.13;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.67' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' opacity='.13' filter='url(%23n)'/%3E%3C/svg%3E")}
+    .progress{height:2px;background:var(--coral);position:fixed;top:0;left:0;width:0;z-index:100;pointer-events:none}
+    .wrap{width:min(1280px,calc(100% - 92px));margin-inline:auto}
+    .nav{height:88px;position:sticky;top:0;z-index:50;transition:background .35s,border-color .35s,box-shadow .35s;border-bottom:1px solid transparent}
+    .nav.scrolled{background:#f7f3ebeF;backdrop-filter:blur(18px);border-bottom-color:var(--line);box-shadow:0 6px 40px #344f3e08}
+    .nav-inner{height:100%;display:flex;align-items:center;gap:36px}
+    .brand{display:flex;align-items:center;gap:12px;white-space:nowrap}
+    .envelope-icon{display:inline-block;width:1em;height:1em;vertical-align:-.125em}
+    .brand-symbol{width:40px;height:40px;border:1px solid #c9d0c2;border-radius:50%;display:grid;place-items:center;color:var(--forest);background:#ffffff70}
+    .brand-symbol svg{width:58%;height:58%}
+    .brand-zh{display:block;font-family:var(--serif);font-weight:700;font-size:19px;letter-spacing:.18em}
+    .brand-en{display:block;font-size:9px;letter-spacing:.22em;color:#7c8b81;margin-top:4px}
+    .nav-menu{display:flex;align-items:center;gap:34px;margin-left:auto;font-size:12px;letter-spacing:.06em;color:#5a6b62}
+    .nav-menu a:not(.nav-cta){position:relative;padding:10px 0}
+    .nav-menu a:not(.nav-cta)::after{content:"";height:1px;background:var(--forest);width:0;position:absolute;left:0;bottom:4px;transition:width .25s}
+    .nav-menu a:hover::after{width:100%}
+    .nav-cta{display:inline-flex;align-items:center;gap:12px;color:#fff;background:var(--forest);padding:14px 22px;border-radius:5px;font-weight:600;transition:transform .2s,background .2s}
+    .nav-cta:hover{transform:translateY(-2px);background:#335b50}
+    .nav-cta span,.btn-primary span{font-size:18px;transition:transform .2s}
+    .nav-cta:hover span,.btn-primary:hover span{transform:translateX(4px)}
+    .menu-toggle{display:none;margin-left:auto;background:none;border:none;color:var(--ink);font-size:25px}
+    .hero{position:relative;min-height:760px;display:grid;grid-template-columns:1.02fr .98fr;gap:22px;align-items:center;padding-top:64px;padding-bottom:118px}
+    .hero::before{content:"";position:absolute;top:1%;left:-13%;height:640px;width:680px;z-index:-1;opacity:.78;filter:blur(2px);background:radial-gradient(ellipse,#e9e8d6 0%,#f6f3e9 48%,transparent 74%);animation:breath 14s ease-in-out infinite alternate}
+    .eyebrow{display:flex;align-items:center;gap:13px;text-transform:uppercase;font-size:11px;letter-spacing:.24em;font-weight:600;color:#70877a}
+    .eyebrow .dot{width:7px;height:7px;border:1px solid #81a394;border-radius:50%;position:relative}
+    .eyebrow .dot::after{content:"";background:#81a394;width:3px;height:3px;position:absolute;left:1px;top:1px;border-radius:50%}
+    .hero h1{font-family:var(--serif);font-size:clamp(52px,5.65vw,88px);font-weight:600;line-height:1.35;letter-spacing:-.07em;margin:32px 0 28px}
+    .hero h1 .line{display:block;white-space:nowrap}
+    .hero h1 em{font-style:normal;position:relative;white-space:nowrap;color:#bc7964}
+    .hero h1 em::after{content:"";position:absolute;bottom:-.06em;left:.03em;right:-.07em;height:13px;border-bottom:3px solid #d9ad88;border-radius:70% 30% 45% 65%;transform:rotate(-2deg)}
+    .hero-copy{color:#6e7c72;max-width:455px;line-height:2.08;font-size:15px}
+    .hero-actions{display:flex;align-items:center;gap:27px;flex-wrap:wrap;margin-top:40px}
+    .btn-primary{border:1px solid var(--forest);background:var(--forest);color:white;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;gap:28px;padding:17px 27px;font-weight:600;font-size:14px;letter-spacing:.04em;box-shadow:0 12px 30px #1e3f381a;transition:transform .25s var(--motion-ease),box-shadow .25s}
+    .btn-primary:hover{transform:translateY(-3px);box-shadow:0 18px 38px #1e3f3830}
+    .text-link{color:#586c61;font-size:13px;border-bottom:1px solid #adbdb2;padding-bottom:6px;transition:color .2s}
+    .text-link:hover{color:#b97864}
+    .hero-stamp{margin-top:62px;display:flex;align-items:center;gap:16px}
+    .stamp-round{width:46px;height:46px;display:grid;place-items:center;border:1px dashed #a1a899;border-radius:50%;font-size:24px;color:#8c9f8b;transform:rotate(-12deg)}
+    .stamp-copy{font-size:10px;line-height:1.8;letter-spacing:.1em;color:#97a098}
+    .stage{height:650px;position:relative;isolation:isolate;display:flex;align-items:center;justify-content:center}
+    .stage::before{content:"";width:580px;height:580px;position:absolute;inset:5% auto auto 0;border-radius:50%;background:radial-gradient(closest-side,#dbe8d6b8,#e8e8d8a8 44%,#f7f3eb00 100%);animation:paper-drift 17s ease-in-out infinite alternate;z-index:-2}
+    .stage::after{content:"";position:absolute;width:475px;height:475px;border-radius:50%;border:1px solid #c7cbb9a8;transform:rotate(14deg);top:60px;right:12px;z-index:-2}
+    .orbit{position:absolute;inset:12px -10px auto auto;width:560px;height:560px;z-index:-1;opacity:.6;pointer-events:none}
+    .float-tag{position:absolute;z-index:5;display:flex;align-items:center;gap:10px;background:#fffdf5;border:1px solid #e8dfce;box-shadow:0 15px 40px #30443a14;padding:14px 17px;border-radius:7px;top:74px;right:-2px;transform:rotate(7deg) translate(var(--tx,0px),var(--ty,0px));transition:transform .3s var(--motion-ease)}
+    .float-tag .icon{width:33px;height:33px;background:#f8e4de;border-radius:50%;display:grid;place-items:center;color:#c67c67;font-size:18px}
+    .float-tag strong{font-size:11px;display:block}
+    .float-tag small{font-size:10px;color:#9da79d;display:block;margin-top:3px}
+    .mini-letter{position:absolute;z-index:4;bottom:37px;left:-13px;transform:rotate(-10deg) translate(calc(var(--tx,0px) * -.4),calc(var(--ty,0px) * -.4));transition:transform .3s var(--motion-ease);background:#eedfca;border:1px solid #ddc5a4;border-radius:4px;box-shadow:0 18px 38px #2c3f3519;width:174px;height:116px;padding:19px 20px}
+    .mini-letter::before{content:"";position:absolute;inset:0;background:linear-gradient(150deg,transparent 50%,#ffffff33 50%);pointer-events:none}
+    .mini-letter .letter-stamp{float:right;border:1px solid #cbad89;color:#9f7d64;padding:4px 6px;font-size:9px;transform:rotate(8deg)}
+    .mini-letter p{font-size:13px;font-family:var(--serif);line-height:1.8;margin:25px 0 0;color:#855d4d}
+    .window{width:min(520px,92%);height:530px;background:#fffdf9;border:1px solid #e7e1d5;border-radius:15px;box-shadow:0 48px 80px #3d554020,0 8px 25px #526a4d1f;position:relative;overflow:hidden;transform:rotate(-3deg);animation:float 9s ease-in-out infinite;will-change:transform}
+    .window-head{height:54px;border-bottom:1px solid #efede7;padding:0 20px;display:flex;align-items:center;justify-content:space-between;background:#fffefb}
+    .traffic{display:flex;gap:6px}.traffic i{width:7px;height:7px;border-radius:50%;background:#e4b4a8}.traffic i:nth-child(2){background:#dbc9a2}.traffic i:nth-child(3){background:#b5c8b4}
+    .window-label{font-size:10px;letter-spacing:.17em;color:#86958d}.window-spark{color:#b09b70;font-size:17px}
+    .window-content{padding:29px 29px 18px}
+    .window-kicker{font-size:9px;letter-spacing:.2em;color:#b08a6c;margin-bottom:7px}
+    .window-title{font-family:var(--serif);font-size:31px;letter-spacing:.05em;margin:0 0 22px}
+    .window-tabs{display:flex;gap:2px;padding:4px;width:fit-content;background:#f2f2e9;border:1px solid #ebeee5;border-radius:8px;margin-bottom:16px}
+    .window-tabs button{font-size:11px;color:#7b8b81;border:none;background:none;padding:9px 13px;border-radius:5px;transition:all .22s}
+    .window-tabs button[aria-selected="true"]{background:#fff;box-shadow:0 2px 8px #40584717;color:#26463b}
+    .demo-row{padding:12px 0;border-bottom:1px solid #f0eee8;display:flex;align-items:center;gap:12px;transition:background .2s,transform .25s}
+    .demo-row:hover{transform:translateX(3px)}
+    .demo-row[hidden]{display:none}
+    .avatar{width:42px;height:42px;border-radius:13px;background:#e7eee8;color:#607e6e;display:grid;place-items:center;font-family:var(--serif);font-size:18px;flex:none}
+    .demo-row:nth-child(2) .avatar{background:#f8e6df;color:#c8816a}
+    .demo-row:nth-child(3) .avatar{background:#f0e9d6;color:#b18d54}
+    .row-open{display:flex;align-items:center;justify-content:space-between;flex:1;min-width:0;text-align:left;background:none;border:none;color:var(--ink);padding:3px 0}
+    .row-open strong{display:block;font-family:var(--serif);font-size:15px;letter-spacing:.03em}
+    .row-open small{display:block;font-size:10px;color:#94a096;margin-top:5px}
+    .row-arrow{font-size:15px;color:#aeb8b0;margin-right:5px;transition:transform .2s}
+    .row-open:hover .row-arrow{transform:translateX(4px)}
+    .star{background:none;border:none;font-size:21px;line-height:1;color:#aeb7ab;padding:8px;display:grid;place-items:center;transition:color .2s,transform .25s}
+    .star[aria-pressed="true"]{color:#d58975}
+    .star.pop{animation:star-pop var(--motion-star) var(--motion-ease)}
+    .window-footer{display:flex;align-items:center;justify-content:space-between;padding-top:18px;font-size:9px;color:#9eaa9e;letter-spacing:.04em}
+    .window-footer .alive{display:inline-flex;align-items:center;gap:7px}
+    .window-footer .alive i{width:5px;height:5px;border-radius:50%;background:#7aa58e}
+    .detail-pane{position:absolute;inset:54px 0 0;background:#fffefb;z-index:3;padding:31px;transform:translateX(var(--motion-sheet-offset));transition:transform var(--motion-sheet) var(--motion-ease);box-shadow:-20px 0 40px #203f3914;visibility:hidden}
+    .detail-pane.open{transform:translateX(0);visibility:visible}
+    .detail-back{border:none;background:none;color:#8e9d93;letter-spacing:.06em;font-size:12px;padding:0}
+    .detail-portrait{height:104px;width:104px;border-radius:30px;background:#e6eee4;color:#6c8a73;font-size:50px;font-family:var(--serif);display:grid;place-items:center;margin:28px auto 18px}
+    .detail-pane h3{text-align:center;font-family:var(--serif);font-size:27px;margin:0 0 7px}
+    .detail-pane .relation{text-align:center;color:#9aa69d;font-size:11px;letter-spacing:.1em}
+    .detail-field{padding:17px 15px;border:1px solid #e9eee4;border-radius:10px;margin-top:15px;background:#fbfcf8}
+    .detail-field label{display:block;color:#9ba89e;font-size:10px;letter-spacing:.12em;margin-bottom:8px}
+    .detail-field p{margin:0;font-size:13px;color:#4c695b}
+    .detail-foot{text-align:center;margin-top:20px;color:#ac8e78;font-family:var(--serif);font-size:12px}
+    .stage:hover .window,.stage:focus-within .window{animation-play-state:paused}
+    .edge-note{position:absolute;bottom:32px;right:0;writing-mode:vertical-rl;font-size:10px;color:#a2b0a3;letter-spacing:.35em}
+    .scroll-cue{position:absolute;bottom:26px;left:0;font-size:10px;letter-spacing:.2em;color:#90a093;display:flex;align-items:center;gap:13px}
+    .scroll-cue:before{content:"";width:32px;height:1px;background:#9aab9c}
+    .hairline{border-top:1px solid var(--line)}
+    .marquee{padding:21px 0;display:flex;align-items:center;justify-content:center;gap:35px;color:#8b9a8d;font-size:11px;letter-spacing:.14em;flex-wrap:wrap}
+    .marquee b{color:#d6b99a;font-size:19px;font-weight:400}
+    .section{padding:132px 0 130px}
+    .section-head{display:flex;gap:50px;justify-content:space-between;align-items:end;margin-bottom:53px}
+    .overline{color:#b6816a;text-transform:uppercase;letter-spacing:.28em;font-size:11px;font-weight:700}
+    .section h2{font-family:var(--serif);font-size:clamp(38px,4.2vw,63px);font-weight:500;line-height:1.5;letter-spacing:-.035em;margin:17px 0 0}
+    .section-head p{color:#849287;font-size:13px;max-width:290px;line-height:2;margin-bottom:7px}
+    .feature-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:20px;grid-auto-rows:340px}
+    .feat{border-radius:20px;position:relative;overflow:hidden;padding:37px 37px 28px;box-shadow:0 20px 48px #4763480a;transition:transform .4s var(--motion-ease),box-shadow .4s var(--motion-ease)}
+    .feat:hover{transform:translateY(-5px);box-shadow:0 30px 66px #4763481d}
+    .feat .feat-num{font-size:10px;letter-spacing:.22em;display:block;margin-bottom:15px;opacity:.62}
+    .feat h3{font-family:var(--serif);font-size:31px;font-weight:500;margin:0 0 11px;letter-spacing:.025em}
+    .feat p{font-size:12px;line-height:2;color:inherit;opacity:.72;max-width:310px;margin:0}
+    .feat-one{grid-row:span 2;background:#24473f;color:#f7f4e9}
+    .feat-one::before{content:"";position:absolute;right:-190px;bottom:-180px;border:1px solid #90b5a238;border-radius:50%;width:630px;height:630px}
+    .feat-one::after{content:"";position:absolute;right:-95px;bottom:-90px;border:1px solid #90b5a245;border-radius:50%;width:430px;height:430px}
+    .favorite-visual{position:absolute;left:37px;right:37px;bottom:46px;height:350px}
+    .fav-paper{position:absolute;width:80%;height:256px;background:#fcfaf4;color:#24473f;border-radius:12px;border:1px solid #fefcf4;box-shadow:0 30px 40px #102e2a30;padding:25px 27px}
+    .fav-paper.back{right:3%;top:49px;transform:rotate(9deg);opacity:.62}
+    .fav-paper.front{left:5%;top:19px;transform:rotate(-7deg);transition:transform .4s}
+    .feat-one:hover .fav-paper.front{transform:rotate(-3deg) translateY(-7px)}
+    .fav-paper .tiny{color:#acb9ac;font-size:9px;letter-spacing:.2em}
+    .fav-paper .ink-name{font-family:var(--serif);font-size:24px;margin:25px 0 10px}
+    .fav-paper .lines{height:1px;background:#e6e5dc;margin:16px 0}
+    .fav-paper .ink-sub{color:#a1b1a5;font-size:11px;letter-spacing:.08em}
+    .fav-paper .bigstar{position:absolute;right:25px;bottom:24px;color:#d28976;font-size:42px}
+    .feat-two{background:#ecefe7;color:#234638}
+    .feat-three{background:#f0e5d5;color:#554336}
+    .method-visual{position:absolute;right:35px;bottom:27px;width:58%;transform:rotate(-4deg)}
+    .method-pill{border-radius:10px;background:#fffef9;border:1px solid #dde4d9;padding:14px 17px;margin-top:8px;box-shadow:0 9px 20px #718b7412;color:#65796d;font-size:11px;display:flex;align-items:center;gap:12px}
+    .method-pill .method-icon{width:25px;height:25px;border-radius:7px;background:#e9efe8;display:grid;place-items:center;font-size:13px;color:#4b8066}
+    .method-pill:nth-child(2){transform:translateX(-25px)}.method-pill:nth-child(3){transform:translateX(-8px)}
+    .sheet-visual{position:absolute;right:38px;bottom:-15px;width:60%;height:176px;background:#fffefa;transform:rotate(7deg);border:1px solid #e1d7c6;border-radius:10px;box-shadow:0 20px 25px #a7865c20;padding:17px}
+    .sheet-top{display:flex;align-items:center;justify-content:space-between;font-size:10px;color:#8b998c;margin-bottom:14px}
+    .sheet-badge{background:#e9f0e5;padding:6px 9px;border-radius:5px;color:#5d856a}
+    .sheet-cell{height:25px;border:1px solid #e9e9df;border-bottom:none;display:grid;grid-template-columns:1.1fr 1fr 1.2fr;color:#9ca99f;font-size:9px}
+    .sheet-cell:last-child{border-bottom:1px solid #e9e9df}
+    .sheet-cell span{display:flex;align-items:center;padding-left:7px;border-right:1px solid #e9e9df;white-space:nowrap;overflow:hidden}
+    .sheet-cell span:last-child{border-right:0}
+    .section-process{background:#efeee5;border-top:1px solid #e4e2d7;border-bottom:1px solid #e4e2d7}
+    .process-layout{display:grid;grid-template-columns:.9fr 1.1fr;gap:100px}
+    .process-sticky{position:sticky;top:145px;align-self:start}
+    .process-sticky p{line-height:2;font-size:13px;color:#87968a;max-width:320px;margin-top:24px}
+    .journey{padding-top:22px}
+    .journey-item{border-top:1px solid #d7ded2;padding:36px 0 51px;display:grid;grid-template-columns:90px 1fr;gap:12px}
+    .journey-index{font-family:var(--serif);font-size:34px;color:#c7aa8e}
+    .journey h3{font-family:var(--serif);font-weight:500;font-size:29px;margin:6px 0 17px}
+    .journey p{color:#7b897f;font-size:13px;line-height:2;max-width:400px}
+    .journey .symbol{margin-top:25px;display:inline-flex;align-items:center;gap:12px;font-size:11px;letter-spacing:.13em;color:#b48572}
+    .journey .symbol:before{width:20px;height:1px;content:"";background:#bd9f88}
+    .letter-band{margin:0;background:#f6e9db;position:relative;overflow:hidden;padding:95px 0}
+    .letter-band::after{content:"信";font-family:var(--serif);font-size:350px;color:#dfc6b122;position:absolute;right:0;bottom:-185px;pointer-events:none}
+    .letter-content{display:flex;justify-content:space-between;gap:50px;align-items:center;position:relative;z-index:1}
+    .letter-icon{border:1px solid #d5b7a1;width:100px;height:100px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;color:#bb8167;font-size:35px}
+    .letter-band blockquote{font-family:var(--serif);font-size:clamp(25px,3.1vw,42px);line-height:1.7;letter-spacing:.03em;color:#745f50;max-width:800px;margin:0}
+    .letter-band small{display:block;font-size:10px;color:#ba967d;letter-spacing:.2em;margin-top:20px}
+    .closing{padding:98px 0 80px;background:var(--paper)}
+    .closing-panel{position:relative;isolation:isolate;overflow:hidden;border-radius:24px;background:#20453d;min-height:390px;color:#fffdf6;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 25px}
+    .closing-panel::before{content:"";position:absolute;width:600px;height:600px;border:1px solid #ffffff18;border-radius:50%;left:-270px;top:-290px;z-index:-1}
+    .closing-panel::after{content:"";position:absolute;width:680px;height:680px;border:1px solid #ffffff1a;border-radius:50%;right:-310px;bottom:-460px;z-index:-1}
+    .closing .overline{color:#d2b08d}
+    .closing h2{font-family:var(--serif);font-size:clamp(32px,4vw,54px);font-weight:500;line-height:1.6;margin:22px 0 33px}
+    .light-cta{color:#24443b;background:#fbf7eb;display:inline-flex;gap:20px;align-items:center;padding:17px 26px;font-size:13px;border-radius:5px;font-weight:700;transition:transform .25s var(--motion-ease),background .25s}
+    .light-cta:hover{transform:translateY(-3px);background:#fff}
+    .closing small{font-size:10px;letter-spacing:.14em;color:#a2bfb0;margin-top:30px}
+    .footer{padding:27px 0 40px;border-top:1px solid #e3e0d5;display:flex;align-items:center;justify-content:space-between;gap:20px;font-size:10px;color:#98a297;letter-spacing:.12em}
+    .footer strong{font-family:var(--serif);font-size:18px;letter-spacing:.15em;color:#5c7367}
+    .reveal{opacity:0;transform:translateY(25px);transition:opacity .85s var(--motion-ease),transform .85s var(--motion-ease)}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+    @keyframes float{0%,100%{transform:rotate(-3deg) translateY(2px)}50%{transform:rotate(-2deg) translateY(-12px)}}
+    @keyframes breath{from{transform:scale(.95) translate(0,-15px)}to{transform:scale(1.08) translate(34px,25px)}}
+    @media(max-width:1130px){
+      .wrap{width:min(1120px,calc(100% - 64px))}
+      .hero{grid-template-columns:1fr 1fr;gap:5px}.hero h1{font-size:clamp(46px,5.7vw,72px)}
+      .stage{transform:scale(.86);transform-origin:center right;margin-left:-50px}
+      .process-layout{gap:50px}
+      .float-tag{right:5px}
+    }
+    @media(max-width:800px){
+      .wrap{width:calc(100% - 40px)}
+      .nav{height:72px}.brand-zh{font-size:17px}.nav-menu{gap:20px}
+      .nav-menu a:not(.nav-cta){display:none}
+      .nav-cta{padding:12px 15px}
+      .hero{display:flex;flex-direction:column;align-items:stretch;gap:12px;padding-top:60px;padding-bottom:65px}
+      .hero h1{font-size:clamp(49px,8vw,73px);margin:25px 0 20px}
+      .hero-copy{max-width:600px}
+      .hero-stamp{margin-top:40px}
+      .stage{align-self:center;width:min(600px,100%);transform:none;margin:0;height:550px}
+      .stage::before{inset:0 auto auto 0;width:100%;height:100%}
+      .stage::after{right:5%;top:50px;width:76%;height:78%}
+      .window{width:90%;height:513px}
+      .float-tag{right:-2px;top:35px}
+      .mini-letter{left:0;bottom:4px}
+      .edge-note{display:none}
+      .scroll-cue{position:static;margin-top:10px}
+      .section{padding:90px 0}
+      .section-head{display:block}
+      .section-head p{margin-top:15px}
+      .feature-grid{grid-template-columns:1fr 1fr;grid-auto-rows:320px}
+      .feat-one{grid-column:1/-1;grid-row:span 1}
+      .favorite-visual{left:auto;right:24px;width:45%;top:-10px;height:300px;transform:scale(.7);transform-origin:top right}
+      .feat-one .feat-num,.feat-one h3,.feat-one p{position:relative;z-index:2}
+      .feat-one p{max-width:300px}
+      .feat{padding:28px}
+      .feat h3{font-size:26px}
+      .method-visual,.sheet-visual{width:77%;right:16px}
+      .process-layout{grid-template-columns:1fr;gap:40px}
+      .process-sticky{position:static}
+      .letter-content{align-items:start}
+    }
+    @media(max-width:550px){
+      .wrap{width:calc(100% - 34px)}
+      .nav-inner{gap:10px}
+      .nav-cta{font-size:11px;gap:8px;padding:11px 12px}
+      .nav-menu{margin-left:auto}
+      .brand{gap:8px}.brand-symbol{width:35px;height:35px}
+      .brand-zh{font-size:15px}.brand-en{font-size:8px}
+      .hero{padding-top:45px}
+      .hero h1{font-size:clamp(39px,10.7vw,56px);letter-spacing:-.09em}
+      .hero-copy{font-size:13px}
+      .hero-actions{gap:20px}
+      .hero-stamp{margin-top:32px}
+      .stage{height:480px}
+      .window{width:96%;height:450px;transform:rotate(-2deg);animation:none}
+      .window-content{padding:20px 19px 12px}
+      .window-title{font-size:25px;margin-bottom:15px}
+      .window-tabs{margin-bottom:9px}
+      .demo-row{padding:7px 0;gap:7px}
+      .avatar{width:37px;height:37px}
+      .row-open strong{font-size:13px}
+      .window-footer{padding-top:13px}
+      .float-tag{top:-8px;right:-2px;padding:8px 10px}
+      .float-tag .icon{width:25px;height:25px}.float-tag small{display:none}
+      .mini-letter{width:130px;height:88px;padding:12px 14px;bottom:-7px;left:1px}
+      .mini-letter p{font-size:10px;margin-top:18px}
+      .mini-letter .letter-stamp{font-size:7px}
+      .detail-pane{padding:18px;inset:54px 0 0}
+      .detail-portrait{width:85px;height:85px;margin-top:17px}
+      .detail-field{padding:12px}
+      .section{padding:77px 0}
+      .section h2{font-size:37px}
+      .section-head{margin-bottom:31px}
+      .feature-grid{display:flex;flex-direction:column;gap:14px}
+      .feat{min-height:355px}
+      .feat-one{min-height:530px}
+      .favorite-visual{left:12px;right:12px;bottom:0;top:auto;width:auto;height:320px;transform:scale(.86);transform-origin:bottom center}
+      .feat h3{font-size:28px}
+      .method-visual{width:75%}
+      .journey-item{grid-template-columns:55px 1fr;padding:27px 0 33px}
+      .journey-index{font-size:28px}.journey h3{font-size:25px}
+      .letter-band{padding:72px 0}
+      .letter-content{display:block}
+      .letter-icon{width:64px;height:64px;font-size:27px;margin-bottom:28px}
+      .letter-band blockquote{font-size:27px}
+      .closing{padding:60px 0}
+      .closing-panel{border-radius:18px;padding:70px 18px}
+      .closing h2{font-size:30px}
+      .footer{align-items:start;flex-direction:column;gap:15px}
+    }
+    @media(prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto}
+      .reveal{opacity:1;transform:none}
+    }
+  </style>
+</head>
+<body>
+<div class="progress" aria-hidden="true"></div><div class="texture" aria-hidden="true"></div>
+<header class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top" aria-label="返回人间有信展示页顶部">
+      <span class="brand-symbol" aria-hidden="true">
+        <svg class="envelope-icon" viewBox="0 0 24 24" focusable="false"><use href="/envelope.svg#envelope"/></svg>
+      </span>
+      <span><span class="brand-zh">人间有信</span><span class="brand-en">RENJIAN YOUXIN</span></span>
+    </a>
+    <nav class="nav-menu" aria-label="展示页导航">
+      <a href="#features">功能亮点</a>
+      <a href="#journey">设计理念</a>
+      <a href="#story">写给每一次想起</a>
+      <a class="nav-cta" href="/">进入通讯录 <span aria-hidden="true">↗</span></a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <div class="hero-left">
+      <div class="eyebrow"><span class="dot" aria-hidden="true"></span> A QUIET PLACE FOR YOUR PEOPLE <span style="color:#c0a47f">/ 2026</span></div>
+      <h1 id="hero-title"><span class="line">人海茫茫，</span><span class="line">总有一些人，</span><span class="line">值得被<em>好好记得。</em></span></h1>
+      <p class="hero-copy">一份简单、安静的通讯录。<br>记下名字，也记下人与人之间的牵挂。<br>让每一次想起，都有迹可循。</p>
+      <div class="hero-actions">
+        <a class="btn-primary" href="/">打开我的通讯录 <span aria-hidden="true">↗</span></a>
+        <a class="text-link" href="#features">看看它能做什么 ↓</a>
+      </div>
+      <div class="hero-stamp">
+        <div class="stamp-round" aria-hidden="true"><svg class="envelope-icon" viewBox="0 0 24 24" focusable="false"><use href="/envelope.svg#envelope"/></svg></div>
+        <div class="stamp-copy">YOUR LITTLE BLACK BOOK<br>MADE FOR THE PEOPLE WHO MATTER</div>
+      </div>
+    </div>
+    <div class="stage" id="demo-stage" aria-label="通讯录模拟交互区域">
+      <svg class="orbit" viewBox="0 0 560 560" fill="none" aria-hidden="true"><path d="M67 372 C42 147 183 27 372 76 C522 115 533 298 443 431" stroke="#A1B7A1" stroke-width="1" stroke-dasharray="4 8"/><circle cx="82" cy="213" r="4" fill="#D6B37C"/><circle cx="445" cy="427" r="7" fill="#D58D75" opacity=".7"/><path d="M434 415l10-11 9 10-9 12z" stroke="#D58D75" stroke-width="1"/></svg>
+      <div class="float-tag" id="float-tag" aria-hidden="true"><span class="icon">★</span><span><strong>重要的人 · 永远置顶</strong><small>每一次收藏，都是一种在意</small></span></div>
+      <div class="window">
+        <div class="window-head">
+          <div class="traffic" aria-hidden="true"><i></i><i></i><i></i></div>
+          <span class="window-label">RENJIAN / CONTACT BOOK</span>
+          <svg class="envelope-icon window-spark" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/envelope.svg#envelope"/></svg>
+        </div>
+        <div class="window-content">
+          <div class="window-kicker">A SMALL BOOK OF PEOPLE</div>
+          <h2 class="window-title">我的通讯录 <span style="font-size:15px;color:#c2b79a">✦</span></h2>
+          <div class="window-tabs" role="tablist" aria-label="示例联系人筛选">
+            <button id="tab-all" role="tab" aria-selected="true" aria-controls="demo-list" type="button">全部联系人 <span class="count-all" aria-live="polite">03</span></button>
+            <button id="tab-star" role="tab" aria-selected="false" aria-controls="demo-list" type="button">☆ 星标联系人 <span class="count-stars" aria-live="polite">01</span></button>
+          </div>
+          <div id="demo-list" role="tabpanel" aria-label="示例联系人列表">
+            <div class="demo-row" data-id="yu">
+              <span class="avatar" aria-hidden="true">予</span>
+              <button class="row-open" data-open="yu" type="button"><span><strong>周予安</strong><small>家人 · 总能让人安心</small></span><span class="row-arrow" aria-hidden="true">↗</span></button>
+              <button class="star" type="button" data-star="yu" aria-pressed="true" aria-label="取消星标 周予安">★</button>
+            </div>
+            <div class="demo-row" data-id="zhi">
+              <span class="avatar" aria-hidden="true">知</span>
+              <button class="row-open" data-open="zhi" type="button"><span><strong>林知夏</strong><small>朋友 · 那些一起走过的日子</small></span><span class="row-arrow" aria-hidden="true">↗</span></button>
+              <button class="star" type="button" data-star="zhi" aria-pressed="false" aria-label="星标 林知夏">☆</button>
+            </div>
+            <div class="demo-row" data-id="jian">
+              <span class="avatar" aria-hidden="true">见</span>
+              <button class="row-open" data-open="jian" type="button"><span><strong>陈见山</strong><small>同事 · 一起把事做好</small></span><span class="row-arrow" aria-hidden="true">↗</span></button>
+              <button class="star" type="button" data-star="jian" aria-pressed="false" aria-label="星标 陈见山">☆</button>
+            </div>
+          </div>
+          <div class="window-footer"><span>✦ 点击名字看详情，点星标试试收藏</span><span class="alive"><i aria-hidden="true"></i>交互演示 · 示例数据</span></div>
+        </div>
+        <div class="detail-pane" id="detail" aria-hidden="true" inert>
+          <button class="detail-back" id="detail-back" type="button">← 返回联系人列表</button>
+          <div class="detail-portrait" id="detail-avatar">予</div>
+          <h3 id="detail-name">周予安</h3><div class="relation" id="detail-relation">家人</div>
+          <div class="detail-field"><label>电话 · MOBILE</label><p>138 ···· 0824（示例）</p></div>
+          <div class="detail-field"><label>邮箱 · EMAIL</label><p id="detail-email">demo@example.com</p></div>
+          <div class="detail-foot">「 把重要的人，好好留在身边。 」</div>
+        </div>
+      </div>
+      <div class="mini-letter" id="mini-letter" aria-hidden="true"><span class="letter-stamp">POST / 2026</span><p>给重要的人，<br>留一个位置。</p></div>
+      <div class="edge-note" aria-hidden="true">THE ART OF KEEPING IN TOUCH</div>
+    </div>
+    <a class="scroll-cue" href="#features">SCROLL TO EXPLORE</a>
+  </section>
+
+  <div class="hairline">
+    <div class="wrap marquee" aria-label="功能概览">
+      <span><svg class="envelope-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/envelope.svg#envelope"/></svg> 珍藏每一个名字</span>
+      <b>✦</b><span>☆ 星标重要的人</span><b>✦</b><span>✉ 多种联系方式</span><b>✦</b><span>↗ Excel 自由备份</span>
+    </div>
+  </div>
+
+  <section class="section wrap" id="features" aria-labelledby="features-title">
+    <div class="section-head reveal">
+      <div><div class="overline">01 / ALL THE LITTLE THINGS</div><h2 id="features-title">在意的细节，<br>都值得被认真对待。</h2></div>
+      <p>不是复杂的管理系统，而是一个恰到好处的地方：能快速找到、安心保存，也能轻轻记住。</p>
+    </div>
+    <div class="feature-grid">
+      <article class="feat feat-one reveal"><span class="feat-num">01 — THE ONES YOU CHERISH</span><h3>把重要的人，放在心上。</h3><p>轻轻点亮一颗星，常联系的人便有了专属的位置。想起时，总能先看到他们。</p>
+        <div class="favorite-visual" aria-hidden="true">
+          <div class="fav-paper back"><div class="tiny">OUR LITTLE ADDRESS BOOK</div><div class="ink-name">那些重要的人</div><div class="lines"></div><div class="ink-sub">Every name has a story.</div></div>
+          <div class="fav-paper front"><div class="tiny">✦ STARRED CONTACT</div><div class="ink-name">写给周予安</div><div class="lines"></div><div class="ink-sub">愿我们永远能找到彼此。</div><span class="bigstar">★</span></div>
+        </div>
+      </article>
+      <article class="feat feat-two reveal"><span class="feat-num">02 — MORE WAYS TO REACH</span><h3>一个名字，<br>好多种联系。</h3><p>电话、邮箱与其他方式，<br>让一份联系更完整。</p>
+        <div class="method-visual" aria-hidden="true">
+          <div class="method-pill"><span class="method-icon">☎</span>电话 · PHONE</div>
+          <div class="method-pill"><span class="method-icon"><svg class="envelope-icon" viewBox="0 0 24 24" focusable="false"><use href="/envelope.svg#envelope"/></svg></span>邮箱 · EMAIL</div>
+          <div class="method-pill"><span class="method-icon"><svg class="envelope-icon" viewBox="0 0 24 24" focusable="false"><use href="/envelope.svg#envelope"/></svg></span>其他 · MORE</div>
+        </div>
+      </article>
+      <article class="feat feat-three reveal"><span class="feat-num">03 — KEEP WHAT MATTERS</span><h3>名单在手，<br>安心备份。</h3><p>支持 Excel 导入与导出，<br>把重要的记录妥善带走。</p>
+        <div class="sheet-visual" aria-hidden="true"><div class="sheet-top"><span>CONTACTS / BACKUP</span><span class="sheet-badge">XLSX ↗</span></div><div class="sheet-cell"><span>姓名</span><span>电话</span><span>邮箱</span></div><div class="sheet-cell"><span>周予安</span><span>138 ···</span><span>···@example</span></div><div class="sheet-cell"><span>林知夏</span><span>136 ···</span><span>···@example</span></div></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section section-process" id="journey" aria-labelledby="journey-title">
+    <div class="wrap process-layout">
+      <div class="process-sticky reveal"><div class="overline">02 / SIMPLE BY DESIGN</div><h2 id="journey-title">每一份牵挂，<br>都有自己的位置。</h2><p>从记住一个名字，到留下一种联系方式，再到把整份心意安全保存——让简单的事情，始终简单。</p></div>
+      <div class="journey">
+        <div class="journey-item reveal"><span class="journey-index">01.</span><div><h3>记住一个名字</h3><p>不必繁琐登记。打开通讯录，找到那个人，或为新朋友留下一张小小的卡片。</p><span class="symbol">ADD SOMEONE NEW</span></div></div>
+        <div class="journey-item reveal"><span class="journey-index">02.</span><div><h3>留住不止一种联系</h3><p>有的人适合电话，有的人适合写信。给一个人留下多个联系方式，让沟通保持自由。</p><span class="symbol">STAY IN TOUCH</span></div></div>
+        <div class="journey-item reveal"><span class="journey-index">03.</span><div><h3>让记忆可以带走</h3><p>支持 Excel 批量导入与导出。即使离开这台设备，也可以把通讯录留存下来。</p><span class="symbol">KEEP A COPY</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="letter-band" id="story"><div class="wrap letter-content reveal"><div class="letter-icon" aria-hidden="true">✉</div><div><blockquote>“ 人与人之间的连接，<br>从一个名字开始。 ”</blockquote><small>A SMALL NOTE, FOR THE PEOPLE WE KEEP CLOSE.</small></div></div></section>
+
+  <section class="closing" aria-labelledby="closing-title"><div class="wrap closing-panel">
+    <div class="overline">AN OPEN INVITATION</div>
+    <h2 id="closing-title">把重要的人，<br>好好留在身边。</h2>
+    <a class="light-cta" href="/">进入我的通讯录 <span aria-hidden="true">↗</span></a>
+    <small>RENJIAN YOUXIN · YOUR LITTLE BLACK BOOK</small>
+  </div></section>
+</main>
+<footer class="wrap footer">
+  <strong><svg class="envelope-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/envelope.svg#envelope"/></svg> 人间有信</strong>
+  <span>SOFTWARE ENGINEERING · EXTREME PROGRAMMING · PROJECT SHOWCASE</span><span>温柔地，记得每一个名字。</span>
+</footer>
+
+<script>
+(() => {
+  'use strict';
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const nav = document.getElementById('nav'), progress = document.querySelector('.progress');
+  function onScroll(){
+    nav.classList.toggle('scrolled', window.scrollY > 22);
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.width = (max > 0 ? Math.min(100,window.scrollY/max*100) : 0)+'%';
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+
+  const sections = document.querySelectorAll('.reveal');
+  if (!reduce && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('visible');io.unobserve(e.target); }
+    }),{threshold:.08,rootMargin:'0px 0px -30px 0px'});
+    sections.forEach(s=>io.observe(s));
+  } else sections.forEach(s=>s.classList.add('visible'));
+
+  // The mockup is illustrative only; it never reads or edits the real contact book.
+  const demo = {
+    yu: {name:'周予安',key:'予',relation:'家人',email:'yuyan@example.com',fav:true},
+    zhi: {name:'林知夏',key:'知',relation:'朋友',email:'zhixia@example.com',fav:false},
+    jian: {name:'陈见山',key:'见',relation:'同事',email:'jianshan@example.com',fav:false}
+  };
+  let mode = 'all', lastOpen = null;
+  const starCount = () => Object.values(demo).filter(c=>c.fav).length;
+  const tabAll = document.getElementById('tab-all'), tabStar = document.getElementById('tab-star');
+  const detail = document.getElementById('detail'), back = document.getElementById('detail-back');
+
+  function refresh(){
+    document.querySelectorAll('.count-stars').forEach(el=>el.textContent=String(starCount()).padStart(2,'0'));
+    tabAll.setAttribute('aria-selected',String(mode==='all'));
+    tabStar.setAttribute('aria-selected',String(mode==='star'));
+    tabAll.tabIndex=mode==='all'?0:-1;
+    tabStar.tabIndex=mode==='star'?0:-1;
+    document.querySelectorAll('.demo-row').forEach(row=>{
+      const c=demo[row.dataset.id];
+      row.hidden=mode==='star'&&!c.fav;
+      const b=row.querySelector('[data-star]');
+      b.textContent=c.fav?'★':'☆';
+      b.setAttribute('aria-pressed',String(c.fav));
+      b.setAttribute('aria-label',(c.fav?'取消星标 ':'星标 ')+c.name);
+    });
+    let empty=document.getElementById('demo-empty');
+    if(mode==='star' && starCount()===0){
+      if(!empty){empty=document.createElement('p');empty.id='demo-empty';empty.style.cssText='text-align:center;padding:35px 10px;color:#87998d;font-size:12px';empty.textContent='还没有星标联系人，点亮一颗星吧。';document.getElementById('demo-list').append(empty);}
+    } else if(empty) empty.remove();
+  }
+  document.querySelectorAll('[data-star]').forEach(btn=>btn.addEventListener('click',()=>{
+    const c=demo[btn.dataset.star];c.fav=!c.fav;
+    btn.classList.remove('pop');void btn.offsetWidth;btn.classList.add('pop');
+    refresh();
+  }));
+  tabAll.addEventListener('click',()=>{mode='all';refresh();});
+  tabStar.addEventListener('click',()=>{mode='star';refresh();});
+  [tabAll,tabStar].forEach(tab=>tab.addEventListener('keydown',event=>{
+    if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+    event.preventDefault();
+    const next=event.key==='Home'?tabAll:event.key==='End'?tabStar:tab===tabAll?tabStar:tabAll;
+    mode=next===tabAll?'all':'star';refresh();next.focus();
+  }));
+  function openDetail(id,trigger){
+    const c=demo[id];if(!c)return;
+    lastOpen=trigger;
+    document.getElementById('detail-avatar').textContent=c.key;
+    document.getElementById('detail-name').textContent=c.name;
+    document.getElementById('detail-relation').textContent=c.relation;
+    document.getElementById('detail-email').textContent=c.email;
+    detail.inert=false;detail.classList.add('open');detail.setAttribute('aria-hidden','false');
+    back.focus({preventScroll:true});
+  }
+  function closeDetail(){
+    detail.classList.remove('open');detail.setAttribute('aria-hidden','true');detail.inert=true;
+    if(lastOpen){lastOpen.focus({preventScroll:true});lastOpen=null;}
+  }
+  document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>openDetail(b.dataset.open,b)));
+  back.addEventListener('click',closeDetail);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&detail.classList.contains('open'))closeDetail();});
+  refresh();
+
+  // Tiny pointer response on decorative labels, disabled for touch or reduced motion.
+  const stage = document.getElementById('demo-stage');
+  if(!reduce && window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+    stage.addEventListener('pointermove',e=>{
+      const r=stage.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+      stage.style.setProperty('--tx',(x*12).toFixed(2)+'px');
+      stage.style.setProperty('--ty',(y*10).toFixed(2)+'px');
+    });
+    stage.addEventListener('pointerleave',()=>{
+      stage.style.setProperty('--tx','0px');
+      stage.style.setProperty('--ty','0px');
+    });
+  }
+})();
+</script>
+</body>
+</html>
